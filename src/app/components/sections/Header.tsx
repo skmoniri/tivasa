@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import MobileMenu from "../tivasa/MobileMenu";
@@ -44,42 +45,41 @@ export default function Header() {
 
   return (
     <>
-      {/* Header system */}
       <header
         className={`fixed inset-x-0 top-0 z-50 text-background transition-transform duration-300 ease-[cubic-bezier(0.77,0,0.18,1)] ${
           hidden ? "-translate-y-full" : "translate-y-0"
         }`}
       >
-        {/* Main header panel */}
         <div className="bg-foreground">
           <div className="mx-auto flex h-24 max-w-[1800px] items-center justify-between px-5 md:px-8 lg:px-10">
-            {/* Logo — Physical Wipe */}
+            {/* Logo */}
             <a
               href="#"
               onClick={() => setMenuOpen(false)}
               className="group relative flex h-11 w-[150px] select-none items-center overflow-visible"
               aria-label="Tivasa home"
             >
-              {/* Logo wipe area */}
               <span className="absolute left-0 top-0 h-11 w-[150px] overflow-hidden">
-                {/* Original symbol */}
+                {/* Symbol */}
                 <span className="absolute inset-y-0 left-0 flex w-11 items-center justify-center [clip-path:inset(0_0_0_0)] transition-[clip-path] delay-[100ms] duration-500 ease-[cubic-bezier(0.77,0,0.18,1)] group-hover:[clip-path:inset(0_0_0_100%)] group-hover:delay-0">
-                  <img
+                  <Image
                     src="/tivasa-logo-symbol.png"
                     alt="Tivasa"
-                    className="h-11 w-auto object-contain"
+                    width={44}
+                    height={44}
+                    priority
+                    className="h-11 w-11 object-contain"
                   />
                 </span>
 
-                {/* TIVASA wordmark */}
+                {/* Wordmark */}
                 <span className="absolute left-0 top-0 flex h-11 items-center whitespace-nowrap font-display text-3xl font-semibold tracking-[-0.055em] [clip-path:inset(0_100%_0_0)] transition-[clip-path] duration-600 ease-[cubic-bezier(0.77,0,0.18,1)] group-hover:[clip-path:inset(0_0_0_0)]">
                   TIVASA
-                  {/* Status dot */}
                   <span className="ml-3 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
                 </span>
 
-                {/* Moving red scanner */}
-                <span className="invisible pointer-events-none absolute left-0 top-0 z-20 h-11 w-px bg-accent transition-[left,visibility] duration-600 ease-[cubic-bezier(0.77,0,0.18,1)] group-hover:visible group-hover:left-[116px]" />
+                {/* Scanner */}
+                <span className="pointer-events-none invisible absolute left-0 top-0 z-20 h-11 w-px bg-accent transition-[left,visibility] duration-600 ease-[cubic-bezier(0.77,0,0.18,1)] group-hover:visible group-hover:left-[116px]" />
               </span>
 
               {/* Technical underline */}
@@ -91,24 +91,17 @@ export default function Header() {
               className="hidden items-center gap-7 md:flex"
               aria-label="Primary navigation"
             >
-              {navItems.map(([label, href], index) => (
+              {navItems.map(([label, href]) => (
                 <a
                   key={label}
                   href={`#${href}`}
-                  className="group relative flex select-none items-center gap-2 py-2"
+                  className="group relative flex select-none items-center py-2"
                 >
-                  {/* Index */}
-                  <span className="font-sans text-[8px] font-medium tracking-[0.08em] text-background/25 transition-colors duration-200 group-hover:text-accent">
-                    0{index + 1}
-                  </span>
-
-                  {/* Label */}
                   <span className="font-sans text-xs font-medium uppercase tracking-[0.14em] text-background/60 transition-colors duration-200 group-hover:text-background">
                     {label}
                   </span>
 
-                  {/* Technical underline */}
-                  <span className="absolute bottom-0 left-[18px] h-px w-0 bg-accent transition-[width] duration-300 ease-[cubic-bezier(0.77,0,0.18,1)] group-hover:w-[calc(100%-18px)]" />
+                  <span className="absolute bottom-0 left-0 h-px w-0 bg-accent transition-[width] duration-300 ease-[cubic-bezier(0.77,0,0.18,1)] group-hover:w-full" />
                 </a>
               ))}
             </nav>
@@ -120,18 +113,14 @@ export default function Header() {
                 href="#contact"
                 className="group relative hidden select-none items-center gap-3 overflow-hidden border border-background/25 px-5 py-3 font-sans text-xs font-medium uppercase tracking-[0.12em] transition-[border-color] duration-200 hover:border-accent sm:flex"
               >
-                {/* Accent sweep */}
                 <span className="absolute inset-0 origin-left scale-x-0 bg-accent transition-transform duration-400 ease-[cubic-bezier(0.77,0,0.18,1)] group-hover:scale-x-100" />
 
-                {/* Technical edge */}
                 <span className="absolute left-0 top-0 z-20 h-full w-px bg-accent" />
 
-                {/* Label */}
                 <span className="relative z-10 transition-colors duration-200 group-hover:text-background">
                   Start a project
                 </span>
 
-                {/* Arrow */}
                 <ArrowUpRight
                   size={16}
                   strokeWidth={1.5}
@@ -173,14 +162,12 @@ export default function Header() {
 
         {/* Industrial machine rail */}
         <div className="relative h-px w-full bg-background/10">
-          {/* Left rail */}
           <span
             className={`absolute left-0 top-0 h-px bg-accent transition-[width] duration-500 ease-[cubic-bezier(0.77,0,0.18,1)] ${
               hidden ? "w-full" : atTop ? "w-0" : "w-1/4"
             }`}
           />
 
-          {/* Right terminal */}
           <span
             className={`absolute right-0 top-0 h-px bg-accent transition-[width] duration-300 ${
               hidden ? "w-0" : atTop ? "w-0" : "w-8"
