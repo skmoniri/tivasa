@@ -5,6 +5,8 @@
   --foreground: #080a0d;
   --accent: #8f2028;
   --surface: #0b1f3a;
+
+  --tivasa-project-transition: 800ms;
 }
 
 @theme inline {
@@ -12,7 +14,6 @@
   --color-foreground: var(--foreground);
   --color-accent: var(--accent);
   --color-surface: var(--surface);
-
   --font-display: var(--font-clash-grotesk);
   --font-sans: var(--font-ibm-plex-sans);
 }
@@ -86,7 +87,9 @@ body {
   }
 }
 
-/* Subtle vertical technical scan */
+/* =========================================================
+   SUBTLE VERTICAL TECHNICAL SCAN
+   ========================================================= */
 
 @keyframes tivasa-scan {
   0% {
@@ -112,11 +115,9 @@ body {
   }
 }
 
-.tivasa-scan {
-  animation: tivasa-scan 8s linear infinite;
-}
-
-/* Scroll indicator */
+/* =========================================================
+   SCROLL INDICATOR
+   ========================================================= */
 
 @keyframes tivasa-scroll {
   0% {
@@ -178,7 +179,6 @@ body {
   background-image:
     linear-gradient(to right, rgba(245, 245, 242, 0.035) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(245, 245, 242, 0.035) 1px, transparent 1px);
-
   background-size: 72px 72px;
 }
 
@@ -197,7 +197,6 @@ body {
   content: "";
   position: absolute;
   pointer-events: none;
-
   transition:
     width 700ms cubic-bezier(0.16, 1, 0.3, 1),
     height 700ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -206,25 +205,19 @@ body {
 
 .tivasa-system-card::before {
   inset: 0 auto auto 0;
-
   width: 28%;
   height: 28%;
-
   border-top: 1px solid var(--accent);
   border-left: 1px solid var(--accent);
-
   opacity: 0.5;
 }
 
 .tivasa-system-card::after {
   inset: auto 0 0 auto;
-
   width: 28%;
   height: 28%;
-
   border-right: 1px solid var(--accent);
   border-bottom: 1px solid var(--accent);
-
   opacity: 0.5;
 }
 
@@ -238,17 +231,12 @@ body {
 .tivasa-system-grid {
   position: absolute;
   inset: 0;
-
   opacity: 0;
-
   background-image:
     linear-gradient(to right, rgba(245, 245, 242, 0.045) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(245, 245, 242, 0.045) 1px, transparent 1px);
-
   background-size: 48px 48px;
-
   transform: scale(1.04);
-
   transition:
     opacity 600ms ease,
     transform 1000ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -261,18 +249,13 @@ body {
 
 .tivasa-system-line {
   position: absolute;
-
   left: 0;
   right: 0;
   bottom: 31%;
-
   height: 1px;
-
   background: var(--accent);
-
   transform: scaleX(0);
   transform-origin: left;
-
   transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -329,11 +312,192 @@ body {
   transition:
     transform 900ms cubic-bezier(0.16, 1, 0.3, 1),
     filter 700ms ease;
+
+  will-change: transform;
 }
 
 .tivasa-project:hover .tivasa-project-image {
   transform: scale(1.035);
   filter: brightness(1.12);
+}
+
+/* =========================================================
+   PROJECT CAROUSEL — EDITORIAL WIPE
+   ========================================================= */
+
+@keyframes tivasa-editorial-wipe-next {
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  68% {
+    clip-path: inset(0 16% 0 0);
+  }
+
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes tivasa-editorial-wipe-prev {
+  0% {
+    clip-path: inset(0 0 0 100%);
+  }
+
+  68% {
+    clip-path: inset(0 0 0 16%);
+  }
+
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.tivasa-editorial-wipe-next,
+.tivasa-editorial-wipe-prev {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  clip-path: inset(0 100% 0 0);
+  will-change: clip-path;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.tivasa-editorial-wipe-next {
+  animation: tivasa-editorial-wipe-next var(--tivasa-project-transition)
+    cubic-bezier(0.76, 0, 0.24, 1) both;
+}
+
+.tivasa-editorial-wipe-prev {
+  animation: tivasa-editorial-wipe-prev var(--tivasa-project-transition)
+    cubic-bezier(0.76, 0, 0.24, 1) both;
+}
+
+/* =========================================================
+   PROJECT IMAGE
+   ========================================================= */
+
+.tivasa-project-image {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at 70% 30%,
+      rgba(245, 245, 242, 0.08),
+      transparent 28%
+    ),
+    linear-gradient(135deg, rgba(11, 31, 58, 0.2), rgba(8, 10, 13, 0.9));
+
+  transition: filter 700ms ease;
+
+  transform: none;
+  will-change: auto;
+}
+
+.tivasa-project:hover .tivasa-project-image {
+  filter: brightness(1.12);
+}
+
+/* =========================================================
+   INCOMING PROJECT IMAGE
+   ========================================================= */
+
+/*
+   Important:
+   The incoming image is NOT translated or scaled.
+
+   Its geometry is identical to the base project from the
+   very first frame. Only the parent wipe is animated.
+*/
+
+.tivasa-incoming-image {
+  transform: none !important;
+  animation: none !important;
+  will-change: auto;
+}
+
+/* =========================================================
+    INCOMING PROJECT NUMBER
+    ========================================================= */
+
+@keyframes tivasa-incoming-number {
+  0% {
+    opacity: 0;
+  }
+
+  55% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.tivasa-incoming-number {
+  animation: tivasa-incoming-number var(--tivasa-project-transition)
+    cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: opacity;
+}
+
+/* =========================================================
+   INCOMING PROJECT CONTENT
+   ========================================================= */
+
+@keyframes tivasa-incoming-content {
+  0% {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+
+  72% {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.tivasa-incoming-content {
+  animation: tivasa-incoming-content var(--tivasa-project-transition)
+    cubic-bezier(0.22, 1, 0.36, 1) both;
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+}
+
+/* =========================================================
+   EDITORIAL WIPE EDGE
+   ========================================================= */
+
+@keyframes tivasa-wipe-edge {
+  0% {
+    opacity: 0;
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  82% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.tivasa-wipe-edge-next,
+.tivasa-wipe-edge-prev {
+  animation: tivasa-wipe-edge var(--tivasa-project-transition)
+    cubic-bezier(0.76, 0, 0.24, 1) both;
+
+  will-change: opacity;
 }
 
 /* =========================================================
@@ -361,7 +525,14 @@ body {
   .tivasa-rotate,
   .tivasa-scan,
   .tivasa-scroll-indicator,
-  .tivasa-menu-enter {
+  .tivasa-menu-enter,
+  .tivasa-editorial-wipe-next,
+  .tivasa-editorial-wipe-prev,
+  .tivasa-incoming-image,
+  .tivasa-incoming-number,
+  .tivasa-incoming-content,
+  .tivasa-wipe-edge-next,
+  .tivasa-wipe-edge-prev {
     animation: none;
   }
 

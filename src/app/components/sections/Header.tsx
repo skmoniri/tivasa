@@ -27,10 +27,8 @@ export default function Header() {
       if (currentScrollY <= 8) {
         setHidden(false);
       } else if (currentScrollY > lastScrollY) {
-        // Scrolling down
         setHidden(true);
       } else if (currentScrollY < lastScrollY) {
-        // Scrolling up
         setHidden(false);
       }
 
@@ -53,49 +51,64 @@ export default function Header() {
         }`}
       >
         {/* Main header panel */}
-        <div className="border-b border-background/10 bg-foreground">
+        <div className="bg-foreground">
           <div className="mx-auto flex h-24 max-w-[1800px] items-center justify-between px-5 md:px-8 lg:px-10">
-            {/* Logo */}
+            {/* Logo — Physical Wipe */}
             <a
               href="#"
               onClick={() => setMenuOpen(false)}
-              className="group relative flex items-center gap-3"
+              className="group relative flex h-11 w-[150px] select-none items-center overflow-visible"
+              aria-label="Tivasa home"
             >
-              <span className="font-display text-3xl font-semibold tracking-[-0.055em]">
-                TIVASA
+              {/* Logo wipe area */}
+              <span className="absolute left-0 top-0 h-11 w-[150px] overflow-hidden">
+                {/* Original symbol */}
+                <span className="absolute inset-y-0 left-0 flex w-11 items-center justify-center [clip-path:inset(0_0_0_0)] transition-[clip-path] delay-[100ms] duration-500 ease-[cubic-bezier(0.77,0,0.18,1)] group-hover:[clip-path:inset(0_0_0_100%)] group-hover:delay-0">
+                  <img
+                    src="/tivasa-logo-symbol.png"
+                    alt="Tivasa"
+                    className="h-11 w-auto object-contain"
+                  />
+                </span>
+
+                {/* TIVASA wordmark */}
+                <span className="absolute left-0 top-0 flex h-11 items-center whitespace-nowrap font-display text-3xl font-semibold tracking-[-0.055em] [clip-path:inset(0_100%_0_0)] transition-[clip-path] duration-600 ease-[cubic-bezier(0.77,0,0.18,1)] group-hover:[clip-path:inset(0_0_0_0)]">
+                  TIVASA
+                  {/* Status dot */}
+                  <span className="ml-3 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                </span>
+
+                {/* Moving red scanner */}
+                <span className="invisible pointer-events-none absolute left-0 top-0 z-20 h-11 w-px bg-accent transition-[left,visibility] duration-600 ease-[cubic-bezier(0.77,0,0.18,1)] group-hover:visible group-hover:left-[116px]" />
               </span>
 
-              {/* Technical status marker */}
-              <span className="relative flex h-2 w-2 items-center justify-center">
-                <span className="absolute h-full w-full rounded-full bg-accent/20" />
-
-                <span className="relative h-1.5 w-1.5 rounded-full bg-accent transition-transform duration-300 group-hover:scale-125" />
-              </span>
-
-              {/* Logo underline */}
-              <span className="absolute -bottom-1 left-0 h-px w-0 bg-accent transition-all duration-500 group-hover:w-full" />
+              {/* Technical underline */}
+              <span className="absolute bottom-0 left-0 h-px w-0 bg-accent transition-[width] duration-500 ease-[cubic-bezier(0.77,0,0.18,1)] group-hover:w-[92px]" />
             </a>
 
             {/* Desktop Navigation */}
-            <nav className="hidden items-center gap-7 md:flex">
+            <nav
+              className="hidden items-center gap-7 md:flex"
+              aria-label="Primary navigation"
+            >
               {navItems.map(([label, href], index) => (
                 <a
                   key={label}
                   href={`#${href}`}
-                  className="group relative flex items-center gap-2 py-2"
+                  className="group relative flex select-none items-center gap-2 py-2"
                 >
                   {/* Index */}
-                  <span className="font-sans text-[8px] font-medium tracking-[0.08em] text-background/25 transition-colors duration-300 group-hover:text-accent">
+                  <span className="font-sans text-[8px] font-medium tracking-[0.08em] text-background/25 transition-colors duration-200 group-hover:text-accent">
                     0{index + 1}
                   </span>
 
                   {/* Label */}
-                  <span className="font-sans text-xs font-medium uppercase tracking-[0.14em] text-background/60 transition-colors duration-300 group-hover:text-background">
+                  <span className="font-sans text-xs font-medium uppercase tracking-[0.14em] text-background/60 transition-colors duration-200 group-hover:text-background">
                     {label}
                   </span>
 
-                  {/* Accent underline */}
-                  <span className="absolute bottom-0 left-[18px] h-px w-0 bg-accent transition-all duration-300 group-hover:w-[calc(100%-18px)]" />
+                  {/* Technical underline */}
+                  <span className="absolute bottom-0 left-[18px] h-px w-0 bg-accent transition-[width] duration-300 ease-[cubic-bezier(0.77,0,0.18,1)] group-hover:w-[calc(100%-18px)]" />
                 </a>
               ))}
             </nav>
@@ -105,22 +118,24 @@ export default function Header() {
               {/* Desktop CTA */}
               <a
                 href="#contact"
-                className="group relative hidden items-center gap-3 overflow-hidden border border-background/25 px-5 py-3 font-sans text-xs font-medium uppercase tracking-[0.12em] transition-colors duration-200 hover:border-accent sm:flex"
+                className="group relative hidden select-none items-center gap-3 overflow-hidden border border-background/25 px-5 py-3 font-sans text-xs font-medium uppercase tracking-[0.12em] transition-[border-color] duration-200 hover:border-accent sm:flex"
               >
-                {/* Red color sweep */}
-                <span className="absolute inset-0 origin-left scale-x-0 bg-accent transition-transform duration-300 ease-[cubic-bezier(0.77,0,0.18,1)] group-hover:scale-x-100" />
+                {/* Accent sweep */}
+                <span className="absolute inset-0 origin-left scale-x-0 bg-accent transition-transform duration-400 ease-[cubic-bezier(0.77,0,0.18,1)] group-hover:scale-x-100" />
 
-                {/* Technical accent */}
+                {/* Technical edge */}
                 <span className="absolute left-0 top-0 z-20 h-full w-px bg-accent" />
 
+                {/* Label */}
                 <span className="relative z-10 transition-colors duration-200 group-hover:text-background">
                   Start a project
                 </span>
 
+                {/* Arrow */}
                 <ArrowUpRight
                   size={16}
                   strokeWidth={1.5}
-                  className="relative z-10 text-accent transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-background"
+                  className="relative z-10 text-accent transition-[transform,color] duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-background"
                 />
               </a>
 
@@ -135,7 +150,7 @@ export default function Header() {
                 <Menu
                   size={28}
                   strokeWidth={1.5}
-                  className={`absolute transition-all duration-300 ${
+                  className={`absolute transition-[transform,opacity] duration-300 ${
                     menuOpen
                       ? "rotate-90 scale-0 opacity-0"
                       : "rotate-0 scale-100 opacity-100"
@@ -145,7 +160,7 @@ export default function Header() {
                 <X
                   size={28}
                   strokeWidth={1.5}
-                  className={`absolute text-accent transition-all duration-300 ${
+                  className={`absolute text-accent transition-[transform,opacity] duration-300 ${
                     menuOpen
                       ? "rotate-0 scale-100 opacity-100"
                       : "-rotate-90 scale-0 opacity-0"
@@ -157,21 +172,17 @@ export default function Header() {
         </div>
 
         {/* Industrial machine rail */}
-        <div
-          className={`relative h-px w-full bg-background/10 transition-all duration-300 ${
-            hidden ? "opacity-100" : "opacity-100"
-          }`}
-        >
-          {/* Red system signal */}
+        <div className="relative h-px w-full bg-background/10">
+          {/* Left rail */}
           <span
-            className={`absolute left-0 top-0 h-px bg-accent transition-all duration-500 ease-[cubic-bezier(0.77,0,0.18,1)] ${
+            className={`absolute left-0 top-0 h-px bg-accent transition-[width] duration-500 ease-[cubic-bezier(0.77,0,0.18,1)] ${
               hidden ? "w-full" : atTop ? "w-0" : "w-1/4"
             }`}
           />
 
-          {/* Small technical endpoint */}
+          {/* Right terminal */}
           <span
-            className={`absolute right-0 top-0 h-px bg-accent transition-all duration-300 ${
+            className={`absolute right-0 top-0 h-px bg-accent transition-[width] duration-300 ${
               hidden ? "w-0" : atTop ? "w-0" : "w-8"
             }`}
           />

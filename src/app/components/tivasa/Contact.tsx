@@ -26,8 +26,8 @@ export default function Contact() {
               </div>
 
               <p className="mt-6 max-w-xs font-sans text-base font-normal leading-7 text-background/40">
-                Start a conversation about a project, product or technical
-                requirement.
+                Technical inquiries, project requirements and product
+                information.
               </p>
             </div>
           </div>
@@ -42,50 +42,81 @@ export default function Contact() {
                 <span className="h-px w-8 bg-accent" />
 
                 <span className="font-sans text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-                  Start a project
+                  Technical inquiries
                 </span>
               </div>
 
               {/* Heading */}
               <h2 className="max-w-6xl font-display text-[clamp(4rem,8vw,9rem)] font-semibold leading-[0.78] tracking-[-0.065em]">
-                Let&apos;s talk.
+                Have a project?
                 <br />
-                <span className="font-normal text-background/75">
-                  Build what&apos;s next.
+                <span className="font-normal text-background/70">
+                  Let&apos;s discuss it.
                 </span>
               </h2>
 
               {/* =====================================================
-                  CONTACT ROW
+                  CONTACT ACTIONS
                   ===================================================== */}
-              <div className="mt-16 border-t border-background/10">
-                <div className="grid md:grid-cols-[1fr_auto] md:items-end md:gap-12">
-                  <div className="pt-7">
-                    <p className="max-w-xl font-sans text-lg font-normal leading-8 text-background/50">
-                      Tell us what you are building, improving or trying to
-                      solve. We&apos;ll start from there.
-                    </p>
+              <div className="mt-16 grid border-t border-background/10 md:grid-cols-2">
+                {/* Primary */}
+                <a
+                  href="mailto:info@tivasa.com"
+                  className="group border-b border-background/10 py-8 md:border-b-0 md:border-r md:pr-10"
+                >
+                  <div className="flex items-start justify-between gap-8">
+                    <div>
+                      <div className="mb-3 font-sans text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
+                        General inquiries
+                      </div>
+
+                      <div className="font-display text-2xl font-medium tracking-[-0.02em] md:text-3xl">
+                        info@tivasa.com
+                      </div>
+                    </div>
+
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-background/15 transition-[border-color,background-color] duration-300 group-hover:border-accent group-hover:bg-accent">
+                      <ArrowUpRight
+                        size={17}
+                        strokeWidth={1.25}
+                        className="transition-colors duration-300 group-hover:text-foreground"
+                      />
+                    </span>
                   </div>
 
-                  <div className="pt-7">
-                    <a
-                      href="#"
-                      className="group flex items-center gap-4 font-sans text-sm font-semibold uppercase tracking-[0.14em] text-background transition-colors duration-300 hover:text-background/70"
-                    >
-                      <span className="border-b border-background/30 pb-1 transition-colors duration-300 group-hover:border-accent">
-                        Start a conversation
-                      </span>
+                  <p className="mt-6 max-w-md font-sans text-sm leading-6 text-background/40">
+                    For product information, technical questions and general
+                    project inquiries.
+                  </p>
+                </a>
 
-                      <span className="flex h-9 w-9 items-center justify-center border border-background/15 transition-[border-color,background-color] duration-300 group-hover:border-accent group-hover:bg-accent">
-                        <ArrowUpRight
-                          size={17}
-                          strokeWidth={1.25}
-                          className="transition-colors duration-300 group-hover:text-foreground"
-                        />
-                      </span>
-                    </a>
+                {/* Secondary */}
+                <a href="#" className="group py-8 md:pl-10">
+                  <div className="flex items-start justify-between gap-8">
+                    <div>
+                      <div className="mb-3 font-sans text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
+                        Project inquiry
+                      </div>
+
+                      <div className="font-display text-2xl font-medium tracking-[-0.02em] md:text-3xl">
+                        Request a consultation
+                      </div>
+                    </div>
+
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-background/15 transition-[border-color,background-color] duration-300 group-hover:border-accent group-hover:bg-accent">
+                      <ArrowUpRight
+                        size={17}
+                        strokeWidth={1.25}
+                        className="transition-colors duration-300 group-hover:text-foreground"
+                      />
+                    </span>
                   </div>
-                </div>
+
+                  <p className="mt-6 max-w-md font-sans text-sm leading-6 text-background/40">
+                    Share your project scope, system requirements or
+                    specification and we&apos;ll take it from there.
+                  </p>
+                </a>
               </div>
 
               {/* =====================================================

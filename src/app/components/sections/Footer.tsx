@@ -28,7 +28,16 @@ export default function Footer() {
                   ===================================================== */}
               <div className="min-w-0">
                 <div className="relative">
-                  <div className="whitespace-nowrap font-display text-[clamp(5.25rem,18vw,18rem)] font-semibold leading-[0.58] tracking-[-0.08em]">
+                  {/* Ghost wordmark */}
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute left-1 top-1 whitespace-nowrap font-display text-[clamp(5.25rem,18vw,18rem)] font-semibold leading-[0.58] tracking-[-0.08em] text-accent/[0.75]"
+                  >
+                    TIVASA
+                  </div>
+
+                  {/* Main wordmark */}
+                  <div className="relative whitespace-nowrap font-display text-[clamp(5.25rem,18vw,18rem)] font-semibold leading-[0.58] tracking-[-0.08em]">
                     TIVASA
                   </div>
                 </div>
