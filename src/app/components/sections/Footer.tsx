@@ -1,13 +1,14 @@
 import { ArrowUp, ArrowUpRight } from "lucide-react";
 
 const exploreLinks = [
-  { label: "Products", href: "#products" },
-  { label: "Projects", href: "#projects" },
+  { label: "Products", href: "/#products" },
+  { label: "Projects", href: "/#projects" },
+  { label: "Installation", href: "/installation" },
 ];
 
 const companyLinks = [
-  { label: "About", href: "#about" },
-  { label: "Contact", href: "#contact" },
+  { label: "About", href: "/#about" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export default function Footer() {

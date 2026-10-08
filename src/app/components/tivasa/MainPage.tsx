@@ -1,7 +1,7 @@
 import Hero from "./Hero";
 import About from "./About";
 import Projects from "./Projects";
-import SystemInteraction from "./SystemInteraction";
+import VRFInstallation from "./VRFInstallation";
 import Products from "./Products";
 import Contact from "./Contact";
 
@@ -11,8 +11,8 @@ export default function MainPage() {
       <Hero />
       <About />
       <Projects />
-      <SystemInteraction />
       <Products />
+      <VRFInstallation />
       <Contact />
     </main>
   );

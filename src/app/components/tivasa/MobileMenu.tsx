@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { navigation } from "./data";
 import { useEffect } from "react";
@@ -8,6 +9,14 @@ interface MobileMenuProps {
   open: boolean;
   onClose: () => void;
 }
+
+const navigationPaths: Record<string, string> = {
+  Products: "/#products",
+  Projects: "/#projects",
+  About: "/#about",
+  Installation: "/installation",
+  Contact: "/#contact",
+};
 
 export default function MobileMenu({ open, onClose }: MobileMenuProps) {
   useEffect(() => {
@@ -41,10 +50,11 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
           {/* Navigation */}
           <nav className="flex flex-col">
             {navigation.map(([, label], index) => (
-              <a
-                href={`#${label.toLowerCase()}`}
+              <Link
+                href={navigationPaths[label] ?? "/"}
                 key={label}
                 onClick={onClose}
+                tabIndex={open ? 0 : -1}
                 className={`group relative flex items-center justify-between border-b border-background/10 py-5 transition-all duration-400 ease-[cubic-bezier(0.77,0,0.18,1)] md:py-6 ${
                   open
                     ? "translate-x-0 opacity-100"
@@ -72,21 +82,21 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
 
                 {/* Bottom technical line */}
                 <span className="absolute bottom-0 left-0 h-px w-0 bg-accent transition-all duration-300 group-hover:w-full" />
-              </a>
+              </Link>
             ))}
           </nav>
 
-          {/* Technical information */}
+          {/* Technical information — compact footer */}
           <div
-            className={`border-t border-background/10 pt-5 font-sans text-[10px] font-medium uppercase tracking-[0.14em] transition-all duration-300 ease-[cubic-bezier(0.77,0,0.18,1)] md:pt-6 ${
+            className={`mt-8 border-t border-background/10 pt-4 font-sans text-[9px] font-medium uppercase tracking-[0.14em] transition-all duration-300 ease-[cubic-bezier(0.77,0,0.18,1)] ${
               open ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
             }`}
             style={{
               transitionDelay: open ? "380ms" : "0ms",
             }}
           >
-            {/* Data header */}
-            <div className="mb-4 flex items-center justify-between text-background/25">
+            {/* Compact system header */}
+            <div className="mb-3 flex items-center justify-between text-background/25">
               <span>SYSTEM / INFORMATION</span>
 
               <span className="flex items-center gap-2">
@@ -95,30 +105,25 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
               </span>
             </div>
 
-            {/* Data grid */}
-            <div className="grid border-y border-background/10 sm:grid-cols-3">
-              <div className="border-b border-background/10 py-4 sm:border-b-0 sm:border-r sm:pr-5">
-                <span className="block text-background/20">Location</span>
-
-                <span className="mt-1 block text-background/60">
-                  Tehran / Iran
-                </span>
+            {/* Single-line technical data */}
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-background/10 pt-3">
+              <div className="flex items-center gap-2">
+                <span className="text-background/25">LOC</span>
+                <span className="text-background/60">TEHRAN / IRAN</span>
               </div>
 
-              <div className="border-b border-background/10 py-4 sm:border-b-0 sm:border-r sm:px-5">
-                <span className="block text-background/20">Division</span>
+              <span className="hidden h-3 w-px bg-background/10 sm:block" />
 
-                <span className="mt-1 block text-background/60">
-                  Engineering
-                </span>
+              <div className="flex items-center gap-2">
+                <span className="text-background/25">DIV</span>
+                <span className="text-background/60">ENGINEERING</span>
               </div>
 
-              <div className="py-4 sm:pl-5">
-                <span className="block text-background/20">Status</span>
+              <span className="hidden h-3 w-px bg-background/10 sm:block" />
 
-                <span className="mt-1 block font-semibold text-accent">
-                  Available
-                </span>
+              <div className="flex items-center gap-2">
+                <span className="text-background/25">STATUS</span>
+                <span className="font-semibold text-accent">AVAILABLE</span>
               </div>
             </div>
           </div>

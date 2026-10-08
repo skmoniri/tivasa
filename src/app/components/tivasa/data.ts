@@ -2,7 +2,8 @@ export const navigation = [
   ["01", "Products"],
   ["02", "Projects"],
   ["03", "About"],
-  ["04", "Contact"],
+  ["04", "Installation"],
+  ["05", "Contact"],
 ] as const;
 
 export const capabilities = [

@@ -1,16 +1,18 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import MobileMenu from "../tivasa/MobileMenu";
 
 const navItems = [
-  ["Products", "products"],
-  ["Projects", "projects"],
-  ["About", "about"],
-  ["Contact", "contact"],
-];
+  ["Products", "/#products"],
+  ["Projects", "/#projects"],
+  ["About", "/#about"],
+  ["Installation", "/installation"],
+  ["Contact", "/#contact"],
+] as const;
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -25,7 +27,9 @@ export default function Header() {
 
       setAtTop(currentScrollY <= 8);
 
-      if (currentScrollY <= 8) {
+      if (menuOpen) {
+        setHidden(false);
+      } else if (currentScrollY <= 8) {
         setHidden(false);
       } else if (currentScrollY > lastScrollY) {
         setHidden(true);
@@ -36,12 +40,14 @@ export default function Header() {
       lastScrollY = currentScrollY;
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [menuOpen]);
 
   return (
     <>
@@ -52,9 +58,11 @@ export default function Header() {
       >
         <div className="bg-foreground">
           <div className="mx-auto flex h-24 max-w-[1800px] items-center justify-between px-5 md:px-8 lg:px-10">
-            {/* Logo */}
-            <a
-              href="#"
+            {/* =====================================================
+                LOGO
+                ===================================================== */}
+            <Link
+              href="/"
               onClick={() => setMenuOpen(false)}
               className="group relative flex h-11 w-[150px] select-none items-center overflow-visible"
               aria-label="Tivasa home"
@@ -84,17 +92,19 @@ export default function Header() {
 
               {/* Technical underline */}
               <span className="absolute bottom-0 left-0 h-px w-0 bg-accent transition-[width] duration-500 ease-[cubic-bezier(0.77,0,0.18,1)] group-hover:w-[92px]" />
-            </a>
+            </Link>
 
-            {/* Desktop Navigation */}
+            {/* =====================================================
+                DESKTOP NAVIGATION
+                ===================================================== */}
             <nav
               className="hidden items-center gap-7 md:flex"
               aria-label="Primary navigation"
             >
               {navItems.map(([label, href]) => (
-                <a
+                <Link
                   key={label}
-                  href={`#${href}`}
+                  href={href}
                   className="group relative flex select-none items-center py-2"
                 >
                   <span className="font-sans text-xs font-medium uppercase tracking-[0.14em] text-background/60 transition-colors duration-200 group-hover:text-background">
@@ -102,15 +112,17 @@ export default function Header() {
                   </span>
 
                   <span className="absolute bottom-0 left-0 h-px w-0 bg-accent transition-[width] duration-300 ease-[cubic-bezier(0.77,0,0.18,1)] group-hover:w-full" />
-                </a>
+                </Link>
               ))}
             </nav>
 
-            {/* Actions */}
+            {/* =====================================================
+                ACTIONS
+                ===================================================== */}
             <div className="flex items-center gap-6">
               {/* Desktop CTA */}
-              <a
-                href="#contact"
+              <Link
+                href="/#contact"
                 className="group relative hidden select-none items-center gap-3 overflow-hidden border border-background/25 px-5 py-3 font-sans text-xs font-medium uppercase tracking-[0.12em] transition-[border-color] duration-200 hover:border-accent sm:flex"
               >
                 <span className="absolute inset-0 origin-left scale-x-0 bg-accent transition-transform duration-400 ease-[cubic-bezier(0.77,0,0.18,1)] group-hover:scale-x-100" />
@@ -126,12 +138,15 @@ export default function Header() {
                   strokeWidth={1.5}
                   className="relative z-10 text-accent transition-[transform,color] duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-background"
                 />
-              </a>
+              </Link>
 
               {/* Mobile Menu Toggle */}
               <button
                 type="button"
-                onClick={() => setMenuOpen((prev) => !prev)}
+                onClick={() => {
+                  setMenuOpen((prev) => !prev);
+                  setHidden(false);
+                }}
                 className="group relative flex h-8 w-8 items-center justify-center md:hidden"
                 aria-label={menuOpen ? "Close menu" : "Open menu"}
                 aria-expanded={menuOpen}
@@ -160,7 +175,9 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Industrial machine rail */}
+        {/* =========================================================
+            INDUSTRIAL MACHINE RAIL
+            ========================================================= */}
         <div className="relative h-px w-full bg-background/10">
           <span
             className={`absolute left-0 top-0 h-px bg-accent transition-[width] duration-500 ease-[cubic-bezier(0.77,0,0.18,1)] ${
@@ -176,6 +193,9 @@ export default function Header() {
         </div>
       </header>
 
+      {/* =========================================================
+          MOBILE MENU
+          ========================================================= */}
       <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
     </>
   );
