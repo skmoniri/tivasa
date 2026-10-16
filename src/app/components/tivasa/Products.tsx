@@ -1,86 +1,193 @@
 "use client";
 
-import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
-import { products } from "./data";
-import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ArrowUpLeft,
+  ArrowUpRight,
+  FileText,
+  Download,
+} from "lucide-react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type MouseEvent as ReactMouseEvent,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 
-const productDescriptions = [
-  "Variable refrigerant flow systems engineered for efficient multi-zone climate control.",
-  "Integrated ducted systems designed for discreet installation and consistent airflow.",
-  "Ceiling-mounted solutions combining efficient air distribution with a clean architectural presence.",
-  "Intelligent control systems designed to monitor and optimize connected HVAC environments.",
-];
+import type { Locale } from "@/i18n/config";
+import { getTivasaData } from "@/i18n/tivasaData";
+import { homepageTranslations } from "@/i18n/homepage";
+import { getProductCatalogs } from "@/i18n/productCatalogs";
 
-const productImages = [
-  "/images/products/vrf.jpg",
-  "/images/products/ducted.jpg",
-  "/images/products/cassette.jpg",
-  "/images/products/controls.jpg",
-];
+interface ProductsProps {
+  locale: Locale;
+}
 
-export default function Products() {
+const EMAIL = "Tetacompany1@gmail.com";
+
+const DRAG_THRESHOLD = 5;
+const FRICTION = 0.94;
+const MIN_VELOCITY = 0.12;
+const MAX_VELOCITY = 2.4;
+const MOMENTUM_MULTIPLIER = 1.0;
+
+export default function Products({ locale }: ProductsProps) {
+  const isRTL = locale === "fa";
+
+  const products = getTivasaData(locale).products;
+  const t = homepageTranslations[locale].products;
+  const catalogData = getProductCatalogs(locale);
+  const labels = catalogData.labels;
+
+  const DirectionArrow = isRTL ? ArrowUpLeft : ArrowUpRight;
+  const PreviousArrow = isRTL ? ArrowRight : ArrowLeft;
+  const NextArrow = isRTL ? ArrowLeft : ArrowRight;
+
   const scrollRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  const cardRefs = useRef<(HTMLElement | null)[]>([]);
+
+  const dragRef = useRef({
+    active: false,
+    pointerId: -1,
+    startX: 0,
+    startY: 0,
+    lastX: 0,
+    lastTime: 0,
+    velocity: 0,
+    moved: false,
+  });
+
+  const animationRef = useRef<number | null>(null);
+  const suppressClickRef = useRef(false);
+
+  const [isDragging, setIsDragging] = useState(false);
+  const [isGliding, setIsGliding] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const cancelMotion = useCallback(() => {
+    if (animationRef.current !== null) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
+    }
+
+    setIsGliding(false);
+  }, []);
+
+  const findNearestIndex = useCallback(() => {
+    const container = scrollRef.current;
+    if (!container) return 0;
+
+    const containerRect = container.getBoundingClientRect();
+    const center = containerRect.left + containerRect.width / 2;
+
+    let closestIndex = 0;
+    let closestDistance = Infinity;
+
+    cardRefs.current.forEach((card, index) => {
+      if (!card) return;
+
+      const rect = card.getBoundingClientRect();
+      const cardCenter = rect.left + rect.width / 2;
+      const distance = Math.abs(center - cardCenter);
+
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIndex = index;
+      }
+    });
+
+    return closestIndex;
+  }, []);
+
+  const scrollToProduct = useCallback(
+    (index: number, behavior: ScrollBehavior = "smooth") => {
+      const card = cardRefs.current[index];
+      const container = scrollRef.current;
+
+      if (!card || !container) return;
+
+      const containerRect = container.getBoundingClientRect();
+      const cardRect = card.getBoundingClientRect();
+
+      const delta =
+        cardRect.left +
+        cardRect.width / 2 -
+        (containerRect.left + containerRect.width / 2);
+
+      container.scrollBy({
+        left: delta,
+        behavior,
+      });
+
+      setActiveIndex(index);
+    },
+    [],
+  );
+
+  const snapToNearest = useCallback(() => {
+    const index = findNearestIndex();
+    scrollToProduct(index, "smooth");
+  }, [findNearestIndex, scrollToProduct]);
 
   useEffect(() => {
     const container = scrollRef.current;
-
     if (!container) return;
 
-    const handleScroll = () => {
-      const center = container.scrollLeft + container.clientWidth / 2;
+    let frame = 0;
 
-      let closestIndex = 0;
-      let closestDistance = Infinity;
+    const updateActive = () => {
+      cancelAnimationFrame(frame);
 
-      cardRefs.current.forEach((card, index) => {
-        if (!card) return;
-
-        const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-        const distance = Math.abs(center - cardCenter);
-
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closestIndex = index;
-        }
+      frame = requestAnimationFrame(() => {
+        setActiveIndex(findNearestIndex());
       });
-
-      setActiveIndex(closestIndex);
     };
 
-    container.addEventListener("scroll", handleScroll, {
+    container.addEventListener("scroll", updateActive, {
       passive: true,
     });
 
-    handleScroll();
+    window.addEventListener("resize", updateActive);
+    updateActive();
 
     return () => {
-      container.removeEventListener("scroll", handleScroll);
+      cancelAnimationFrame(frame);
+      container.removeEventListener("scroll", updateActive);
+      window.removeEventListener("resize", updateActive);
+    };
+  }, [findNearestIndex, locale]);
+
+  useEffect(() => {
+    return () => {
+      if (animationRef.current !== null) {
+        cancelAnimationFrame(animationRef.current);
+      }
     };
   }, []);
 
   useEffect(() => {
     const container = scrollRef.current;
-
     if (!container) return;
 
     const handleWheel = (event: WheelEvent) => {
-      if (container.scrollWidth <= container.clientWidth) return;
+      if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
+      if (container.scrollWidth <= container.clientWidth + 1) return;
 
-      const atStart = container.scrollLeft <= 0;
-      const atEnd =
-        container.scrollLeft + container.clientWidth >=
-        container.scrollWidth - 1;
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      const position = Math.abs(container.scrollLeft);
 
-      const scrollingForward = event.deltaY > 0;
-      const scrollingBackward = event.deltaY < 0;
+      const atStart = position <= 1;
+      const atEnd = position >= maxScroll - 1;
 
-      if ((scrollingForward && !atEnd) || (scrollingBackward && !atStart)) {
+      if ((event.deltaY > 0 && !atEnd) || (event.deltaY < 0 && !atStart)) {
         event.preventDefault();
 
         container.scrollBy({
-          left: event.deltaY,
+          left: event.deltaY * (isRTL ? -1 : 1),
           behavior: "auto",
         });
       }
@@ -93,23 +200,209 @@ export default function Products() {
     return () => {
       container.removeEventListener("wheel", handleWheel);
     };
-  }, []);
+  }, [isRTL]);
 
-  const scrollToProduct = (index: number) => {
-    const card = cardRefs.current[index];
+  const startMomentum = useCallback(
+    (initialVelocity: number) => {
+      const container = scrollRef.current;
+      if (!container) return;
 
-    if (!card) return;
+      let velocity = Math.max(
+        -MAX_VELOCITY,
+        Math.min(MAX_VELOCITY, initialVelocity),
+      );
 
-    card.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "center",
-    });
+      velocity *= MOMENTUM_MULTIPLIER;
 
-    setActiveIndex(index);
+      if (Math.abs(velocity) < MIN_VELOCITY) {
+        snapToNearest();
+        return;
+      }
+
+      setIsGliding(true);
+
+      let lastTime = performance.now();
+
+      const animate = (time: number) => {
+        const element = scrollRef.current;
+
+        if (!element) {
+          animationRef.current = null;
+          setIsGliding(false);
+          return;
+        }
+
+        const dt = Math.min(time - lastTime, 32);
+        lastTime = time;
+
+        const before = element.scrollLeft;
+
+        element.scrollLeft += velocity * dt;
+
+        const after = element.scrollLeft;
+
+        if (Math.abs(after - before) < 0.01) {
+          animationRef.current = null;
+
+          animationRef.current = null;
+          snapToNearest();
+          setIsGliding(false);
+
+          return;
+        }
+
+        velocity *= Math.pow(FRICTION, dt / 16.67);
+
+        if (Math.abs(velocity) <= MIN_VELOCITY) {
+          animationRef.current = null;
+
+          animationRef.current = null;
+          snapToNearest();
+          setIsGliding(false);
+
+          return;
+        }
+
+        animationRef.current = requestAnimationFrame(animate);
+      };
+
+      animationRef.current = requestAnimationFrame(animate);
+    },
+    [snapToNearest],
+  );
+
+  const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.pointerType !== "mouse" || event.button !== 0) {
+      return;
+    }
+
+    cancelMotion();
+
+    const container = scrollRef.current;
+    if (!container) return;
+
+    dragRef.current = {
+      active: true,
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      lastX: event.clientX,
+      lastTime: performance.now(),
+      velocity: 0,
+      moved: false,
+    };
+
+    suppressClickRef.current = false;
+  };
+
+  const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const container = scrollRef.current;
+    const drag = dragRef.current;
+
+    if (!container || !drag.active) return;
+    if (event.pointerId !== drag.pointerId) return;
+
+    const deltaX = event.clientX - drag.startX;
+    const deltaY = event.clientY - drag.startY;
+
+    if (!drag.moved) {
+      if (
+        Math.abs(deltaX) < DRAG_THRESHOLD &&
+        Math.abs(deltaY) < DRAG_THRESHOLD
+      ) {
+        return;
+      }
+
+      if (Math.abs(deltaY) > Math.abs(deltaX)) {
+        drag.active = false;
+        return;
+      }
+
+      drag.moved = true;
+      suppressClickRef.current = true;
+
+      setIsDragging(true);
+      container.setPointerCapture(event.pointerId);
+
+      drag.lastX = drag.startX;
+      drag.lastTime = performance.now();
+
+      // Continue processing the movement instead of returning.
+      // This prevents the initial drag distance from being lost.
+    }
+
+    const now = performance.now();
+    const dt = Math.max(now - drag.lastTime, 1);
+    const movementX = event.clientX - drag.lastX;
+
+    container.scrollLeft -= movementX;
+
+    const instantVelocity = -movementX / dt;
+
+    drag.velocity = drag.velocity * 0.35 + instantVelocity * 0.65;
+
+    drag.lastX = event.clientX;
+    drag.lastTime = now;
+  };
+
+  const finishDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const container = scrollRef.current;
+    const drag = dragRef.current;
+
+    if (event.pointerId !== drag.pointerId) return;
+
+    const wasMoved = drag.moved;
+    const velocity = drag.velocity;
+    const totalMovement = event.clientX - drag.startX;
+
+    if (container?.hasPointerCapture(event.pointerId)) {
+      container.releasePointerCapture(event.pointerId);
+    }
+
+    drag.active = false;
+    drag.pointerId = -1;
+    drag.moved = false;
+
+    setIsDragging(false);
+
+    if (!wasMoved) return;
+
+    const currentIndex = findNearestIndex();
+
+    // Determine direction using actual pointer movement.
+    const direction = totalMovement < 0 ? 1 : -1;
+
+    // In RTL, visual direction is reversed.
+    const adjustedDirection = isRTL ? -direction : direction;
+
+    const SWIPE_THRESHOLD = 45;
+
+    if (Math.abs(totalMovement) >= SWIPE_THRESHOLD) {
+      const targetIndex = Math.max(
+        0,
+        Math.min(products.length - 1, currentIndex + adjustedDirection),
+      );
+
+      scrollToProduct(targetIndex, "smooth");
+      return;
+    }
+
+    // For very small movements, preserve momentum.
+    startMomentum(velocity);
+  };
+
+  const handleCarouselClick = (event: ReactMouseEvent<HTMLDivElement>) => {
+    if (!suppressClickRef.current) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    suppressClickRef.current = false;
   };
 
   const moveProduct = (direction: "next" | "previous") => {
+    cancelMotion();
+
     const nextIndex =
       direction === "next"
         ? Math.min(activeIndex + 1, products.length - 1)
@@ -118,351 +411,433 @@ export default function Products() {
     scrollToProduct(nextIndex);
   };
 
+  const selectProduct = (index: number) => {
+    cancelMotion();
+    scrollToProduct(index);
+  };
+
   return (
     <section
       id="products"
+      dir={isRTL ? "rtl" : "ltr"}
       className="border-b border-foreground/10 bg-background text-foreground"
     >
       <div className="mx-auto max-w-[1800px]">
-        {/* =========================================================
-            HEADER
-            ========================================================= */}
+        {/* SECTION HEADER */}
         <div className="grid lg:grid-cols-12">
-          {/* SECTION MARKER */}
-          <div className="border-b border-foreground/10 p-6 lg:col-span-3 lg:border-b-0 lg:border-r lg:p-10">
-            <div className="relative pl-4">
-              <div className="absolute left-0 top-0 h-full w-px bg-accent" />
+          <div
+            className={`border-b border-foreground/10 p-5 lg:col-span-3 lg:border-b-0 lg:p-7 ${
+              isRTL ? "lg:border-l" : "lg:border-r"
+            }`}
+          >
+            <div className={`relative ${isRTL ? "pr-4" : "pl-4"}`}>
+              <span
+                className={`absolute inset-y-0 w-px bg-accent ${
+                  isRTL ? "right-0" : "left-0"
+                }`}
+              />
 
               <div className="flex items-center gap-2">
                 <span className="h-1.5 w-1.5 bg-accent" />
 
-                <div className="font-sans text-sm font-semibold uppercase tracking-[0.16em] text-accent">
-                  Products
-                </div>
+                <span
+                  className={`font-sans text-sm font-semibold text-accent ${
+                    isRTL ? "" : "uppercase tracking-[0.16em]"
+                  }`}
+                >
+                  {t.label}
+                </span>
               </div>
 
-              <div className="mt-6 max-w-[220px] font-sans text-base font-normal leading-7 text-foreground/45">
-                Engineering / Manufacturing / Technology
-              </div>
+              <p className="mt-3 max-w-[230px] font-sans text-sm leading-6 text-foreground/45">
+                {t.disciplines}
+              </p>
             </div>
           </div>
 
-          {/* INTRO */}
-          <div className="p-6 md:p-10 lg:col-span-9 lg:p-16">
-            <div className="max-w-5xl">
-              <h2 className="font-display text-[clamp(3.5rem,7vw,8rem)] font-semibold leading-[0.8] tracking-[-0.06em]">
-                Products
+          <div className="p-5 md:p-7 lg:col-span-9 lg:px-10 lg:py-7">
+            <div className="grid items-end gap-4 xl:grid-cols-[1fr_0.75fr] xl:gap-8">
+              <h2
+                className={`font-display font-semibold ${
+                  isRTL
+                    ? "text-[clamp(2.2rem,3.7vw,4.2rem)] leading-[1.25]"
+                    : "text-[clamp(2.8rem,4.6vw,5.1rem)] leading-[0.86] tracking-[-0.06em]"
+                }`}
+              >
+                {t.headingFirst}
                 <br />
-                <span className="font-normal">with purpose.</span>
+                <span className="font-normal">{t.headingSecond}</span>
               </h2>
 
-              <p className="mt-10 max-w-2xl font-sans text-lg font-normal leading-8 text-foreground/55">
-                Explore Tivasa&apos;s technical products and solutions through
-                specifications, applications, documentation and engineering
-                context.
+              <p className="max-w-lg font-sans text-[13px] leading-6 text-foreground/55">
+                {t.description}
               </p>
             </div>
           </div>
         </div>
 
-        {/* =========================================================
-    PRODUCT NAVIGATION
-    ========================================================= */}
+        {/* PRODUCT NAVIGATION */}
         <div className="sticky top-0 z-20 border-y border-foreground/10 bg-background/95 backdrop-blur-md">
           <div className="flex items-center">
-            {/* DESKTOP LABEL */}
-            <div className="hidden shrink-0 border-r border-foreground/10 px-6 py-4 font-sans text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground/35 md:block lg:px-10">
-              Explore
+            <div
+              className={`hidden shrink-0 px-6 py-3 font-sans text-[10px] font-semibold text-foreground/35 md:block ${
+                isRTL
+                  ? "border-l border-foreground/10"
+                  : "border-r border-foreground/10 uppercase tracking-[0.16em]"
+              }`}
+            >
+              {t.explore}
             </div>
 
-            {/* =====================================================
-        DESKTOP NAV
-        ===================================================== */}
+            {/* DESKTOP TABS */}
             <div className="hidden min-w-0 flex-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:block">
               <div className="flex min-w-max">
-                {products.map(([number, title], index) => {
+                {products.map((product, index) => {
                   const isActive = activeIndex === index;
 
                   return (
                     <button
-                      key={number}
+                      key={product.number}
                       type="button"
-                      onClick={() => scrollToProduct(index)}
+                      onClick={() => selectProduct(index)}
                       aria-current={isActive ? "true" : undefined}
-                      className={`group relative flex items-center gap-3 overflow-hidden border-r border-foreground/10 px-5 py-4 text-left outline-none transition-colors duration-300 lg:px-7 ${
+                      className={`relative flex items-center gap-3 px-6 py-3 font-sans text-xs font-semibold transition-colors ${
+                        isRTL
+                          ? "border-l border-foreground/10"
+                          : "border-r border-foreground/10"
+                      } ${
                         isActive
                           ? "text-foreground"
                           : "text-foreground/35 hover:text-foreground"
-                      } focus-visible:bg-foreground/[0.035]`}
+                      }`}
                     >
-                      {/* HOVER BACKGROUND */}
                       <span
-                        aria-hidden="true"
-                        className={`absolute inset-0 origin-left bg-foreground/[0.035] transition-transform duration-500 ease-out ${
-                          isActive
-                            ? "scale-x-100"
-                            : "scale-x-0 group-hover:scale-x-100"
-                        }`}
-                      />
-
-                      {/* NUMBER */}
-                      <span
-                        className={`relative z-10 font-sans text-[10px] font-semibold transition-colors duration-300 ${
-                          isActive
-                            ? "text-accent"
-                            : "text-foreground/30 group-hover:text-accent"
-                        }`}
+                        dir="ltr"
+                        className={
+                          isActive ? "text-accent" : "text-foreground/30"
+                        }
                       >
-                        {number}
+                        {product.number}
                       </span>
 
-                      {/* TITLE */}
-                      <span className="relative z-10 font-sans text-xs font-semibold uppercase tracking-[0.12em]">
-                        {title}
-                      </span>
-
-                      {/* ACTIVE INDICATOR */}
                       <span
-                        aria-hidden="true"
-                        className={`absolute bottom-0 left-0 h-px w-full origin-left bg-accent transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        className={isRTL ? "" : "uppercase tracking-[0.1em]"}
+                      >
+                        {product.title}
+                      </span>
+
+                      <span
+                        className={`absolute inset-x-0 bottom-0 h-px bg-accent ${
                           isActive ? "scale-x-100" : "scale-x-0"
                         }`}
                       />
-
-                      {/* FOCUS INDICATOR */}
-                      <span
-                        aria-hidden="true"
-                        className="pointer-events-none absolute inset-1 border border-accent/0 transition-colors duration-200 group-focus-visible:border-accent/35"
-                      />
                     </button>
                   );
                 })}
               </div>
             </div>
 
-            {/* =====================================================
-        MOBILE NAV
-        ===================================================== */}
-            <div className="flex min-w-0 flex-1 items-center md:hidden">
-              <div className="flex h-[52px] shrink-0 items-center border-r border-foreground/10 px-5">
-                <span className="font-sans text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground/35">
-                  Products
-                </span>
-              </div>
-
-              <div className="flex min-w-0 flex-1 items-center overflow-hidden">
-                {products.map(([number], index) => {
-                  const isActive = activeIndex === index;
-
-                  return (
-                    <button
-                      key={number}
-                      type="button"
-                      onClick={() => scrollToProduct(index)}
-                      aria-label={`Go to product ${number}`}
-                      aria-current={isActive ? "true" : undefined}
-                      className={`group relative flex h-[52px] min-w-[44px] flex-1 items-center justify-center font-sans text-[10px] font-semibold outline-none transition-colors duration-300 ${
-                        isActive
-                          ? "text-accent"
-                          : "text-foreground/30 hover:text-foreground"
-                      } focus-visible:bg-foreground/[0.035]`}
-                    >
-                      <span className="relative z-10">{number}</span>
-
-                      <span
-                        aria-hidden="true"
-                        className={`absolute bottom-0 left-2 right-2 h-px origin-center bg-accent transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                          isActive
-                            ? "scale-x-100"
-                            : "scale-x-0 group-hover:scale-x-60"
-                        }`}
-                      />
-
-                      <span
-                        aria-hidden="true"
-                        className="pointer-events-none absolute inset-1 border border-accent/0 transition-colors duration-200 group-focus-visible:border-accent/35"
-                      />
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* MOBILE CONTROLS */}
-              <div className="flex shrink-0 border-l border-foreground/10">
+            {/* MOBILE TABS */}
+            <div className="flex min-w-0 flex-1 md:hidden">
+              {products.map((product, index) => (
                 <button
+                  key={product.number}
                   type="button"
-                  aria-label="Previous product"
-                  onClick={() => moveProduct("previous")}
-                  disabled={activeIndex === 0}
-                  className="group flex h-[52px] w-[42px] items-center justify-center border-r border-foreground/10 text-foreground/35 outline-none transition-colors duration-300 hover:text-foreground disabled:pointer-events-none disabled:opacity-20 focus-visible:bg-foreground/[0.035] focus-visible:text-foreground"
+                  onClick={() => selectProduct(index)}
+                  aria-label={`${t.goToAria} ${product.number}`}
+                  aria-current={activeIndex === index ? "true" : undefined}
+                  className={`relative flex h-[44px] flex-1 items-center justify-center font-sans text-xs font-semibold ${
+                    activeIndex === index ? "text-accent" : "text-foreground/30"
+                  }`}
                 >
-                  <ArrowLeft
-                    size={14}
-                    strokeWidth={1.4}
-                    className="transition-transform duration-300 ease-out group-hover:-translate-x-0.5"
+                  <span dir="ltr">{product.number}</span>
+
+                  <span
+                    className={`absolute inset-x-2 bottom-0 h-px bg-accent ${
+                      activeIndex === index ? "scale-x-100" : "scale-x-0"
+                    }`}
                   />
                 </button>
-
-                <button
-                  type="button"
-                  aria-label="Next product"
-                  onClick={() => moveProduct("next")}
-                  disabled={activeIndex === products.length - 1}
-                  className="group flex h-[52px] w-[42px] items-center justify-center text-foreground/35 outline-none transition-colors duration-300 hover:text-foreground disabled:pointer-events-none disabled:opacity-20 focus-visible:bg-foreground/[0.035] focus-visible:text-foreground"
-                >
-                  <ArrowRight
-                    size={14}
-                    strokeWidth={1.4}
-                    className="transition-transform duration-300 ease-out group-hover:translate-x-0.5"
-                  />
-                </button>
-              </div>
+              ))}
             </div>
 
-            {/* =====================================================
-        DESKTOP CONTROLS
-        ===================================================== */}
-            <div className="hidden shrink-0 border-l border-foreground/10 md:flex">
+            {/* ARROWS */}
+            <div
+              className={`flex shrink-0 ${
+                isRTL
+                  ? "border-r border-foreground/10"
+                  : "border-l border-foreground/10"
+              }`}
+            >
               <button
                 type="button"
-                aria-label="Previous product"
+                aria-label={t.previousAria}
                 onClick={() => moveProduct("previous")}
                 disabled={activeIndex === 0}
-                className="group flex h-[49px] w-[52px] items-center justify-center border-r border-foreground/10 text-foreground/40 outline-none transition-colors duration-300 hover:text-foreground disabled:pointer-events-none disabled:opacity-20 focus-visible:bg-foreground/[0.035] focus-visible:text-foreground"
+                className={`flex h-[44px] w-[44px] items-center justify-center text-foreground/50 hover:text-accent disabled:opacity-20 ${
+                  isRTL
+                    ? "border-l border-foreground/10"
+                    : "border-r border-foreground/10"
+                }`}
               >
-                <ArrowLeft
-                  size={16}
-                  strokeWidth={1.4}
-                  className="transition-transform duration-300 ease-out group-hover:-translate-x-0.5"
-                />
+                <PreviousArrow size={16} strokeWidth={1.4} />
               </button>
 
               <button
                 type="button"
-                aria-label="Next product"
+                aria-label={t.nextAria}
                 onClick={() => moveProduct("next")}
                 disabled={activeIndex === products.length - 1}
-                className="group flex h-[49px] w-[52px] items-center justify-center text-foreground/40 outline-none transition-colors duration-300 hover:text-foreground disabled:pointer-events-none disabled:opacity-20 focus-visible:bg-foreground/[0.035] focus-visible:text-foreground"
+                className="flex h-[44px] w-[44px] items-center justify-center text-foreground/50 hover:text-accent disabled:opacity-20"
               >
-                <ArrowRight
-                  size={16}
-                  strokeWidth={1.4}
-                  className="transition-transform duration-300 ease-out group-hover:translate-x-0.5"
-                />
+                <NextArrow size={16} strokeWidth={1.4} />
               </button>
             </div>
           </div>
         </div>
 
-        {/* =========================================================
-            PRODUCT TRACK
-            ========================================================= */}
+        {/* MOMENTUM CAROUSEL */}
         <div
           ref={scrollRef}
-          className="flex snap-x snap-mandatory gap-px overflow-x-auto bg-foreground/10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          dir={isRTL ? "rtl" : "ltr"}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={finishDrag}
+          onPointerCancel={finishDrag}
+          onClickCapture={handleCarouselClick}
+          className={`flex gap-px overflow-x-auto overscroll-x-contain bg-foreground/10 select-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+            isDragging ? "cursor-grabbing" : "cursor-grab"
+          }`}
+          style={{
+            touchAction: "pan-y",
+            scrollBehavior: "auto",
+          }}
         >
-          {products.map(([number, title], index) => (
-            <a
-              href="#"
-              key={number}
-              ref={(element) => {
-                cardRefs.current[index] = element;
-              }}
-              className="group relative flex min-w-[88vw] snap-center flex-col bg-background p-5 md:min-w-[62vw] md:p-10 lg:min-w-[52vw] lg:p-12 xl:min-w-[46vw]"
-            >
-              {/* IMAGE */}
-              <div className="relative aspect-[16/9] overflow-hidden bg-surface">
-                <img
-                  src={productImages[index % productImages.length]}
-                  alt={title}
-                  className="h-full w-full object-cover opacity-90 grayscale transition-transform duration-700 ease-out group-hover:scale-[1.035] group-hover:grayscale-0"
-                />
+          {products.map((product, index) => {
+            const profile = catalogData.profiles[index];
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+            const subject = isRTL
+              ? `درخواست مشاوره - ${product.title}`
+              : `Product Consultation - ${product.title}`;
 
-                <div className="absolute left-4 top-4 flex items-center gap-2 md:left-5 md:top-5">
-                  <span className="h-1.5 w-1.5 bg-accent" />
+            const inquiryHref = `mailto:${EMAIL}?subject=${encodeURIComponent(
+              subject,
+            )}`;
 
-                  <span className="font-sans text-[9px] font-semibold uppercase tracking-[0.16em] text-white/70">
-                    Tivasa / {number}
-                  </span>
-                </div>
+            return (
+              <article
+                key={product.number}
+                ref={(element) => {
+                  cardRefs.current[index] = element;
+                }}
+                dir={isRTL ? "rtl" : "ltr"}
+                className={`group flex w-[86vw] shrink-0 snap-center flex-col bg-background p-4 sm:w-[66vw] sm:p-5 lg:w-[46vw] lg:p-6 xl:w-[42vw] ${
+                  isDragging && activeIndex === index ? "relative z-10" : ""
+                }`}
+              >
+                {/* PRODUCT IMAGE */}
+                <div className="relative w-full overflow-hidden border border-foreground/10 bg-[#e5e7e7]">
+                  <Image
+                    src={product.image}
+                    alt={`${product.title} - ${product.series}`}
+                    width={1600}
+                    height={900}
+                    sizes="(max-width: 640px) 86vw, (max-width: 1024px) 66vw, (max-width: 1280px) 46vw, 42vw"
+                    quality={90}
+                    priority={index === 0}
+                    draggable={false}
+                    className="pointer-events-none block h-auto w-full"
+                  />
 
-                <div className="absolute bottom-4 right-4 flex h-9 w-9 items-center justify-center border border-white/25 text-white transition-all duration-500 group-hover:border-white group-hover:bg-white group-hover:text-surface md:bottom-5 md:right-5 md:h-10 md:w-10">
-                  <ArrowUpRight size={16} strokeWidth={1.3} />
-                </div>
-              </div>
+                  {/* TECHNICAL BORDER */}
+                  <div className="pointer-events-none absolute inset-3 border border-foreground/10 md:inset-4" />
 
-              {/* PRODUCT INFORMATION */}
-              <div className="mt-7 grid gap-7 md:mt-8 md:grid-cols-12 md:gap-8">
-                <div className="md:col-span-7">
-                  <div className="font-sans text-[9px] font-semibold uppercase tracking-[0.16em] text-accent md:text-[10px]">
-                    Technical product
+                  <div className="pointer-events-none absolute inset-3 md:inset-4">
+                    <span className="absolute left-0 top-0 h-3 w-3 border-l border-t border-foreground/50" />
+                    <span className="absolute right-0 top-0 h-3 w-3 border-r border-t border-foreground/50" />
+                    <span className="absolute bottom-0 left-0 h-3 w-3 border-b border-l border-foreground/50" />
+                    <span className="absolute bottom-0 right-0 h-3 w-3 border-b border-r border-foreground/50" />
                   </div>
 
-                  <h3 className="mt-3 font-display text-[clamp(2.35rem,5vw,5rem)] font-semibold leading-[0.86] tracking-[-0.055em] md:mt-4">
-                    {title}
-                  </h3>
-                </div>
+                  {/* IMAGE METADATA */}
+                  <div className="pointer-events-none absolute left-5 right-5 top-5 flex items-center justify-between gap-3">
+                    <span
+                      dir="ltr"
+                      className="bg-background/90 px-2 py-1 font-sans text-[9px] font-semibold uppercase tracking-[0.12em] text-foreground/65"
+                    >
+                      TIVASA / {product.number}
+                    </span>
 
-                <div className="md:col-span-5 md:pt-5">
-                  <p className="font-sans text-sm leading-6 text-foreground/50">
-                    {productDescriptions[index % productDescriptions.length]}
-                  </p>
-                </div>
-              </div>
-
-              {/* METADATA */}
-              <div className="mt-8 grid grid-cols-2 border-t border-foreground/10 pt-4 md:mt-10 md:grid-cols-3 md:pt-5">
-                <div>
-                  <div className="font-sans text-[8px] font-semibold uppercase tracking-[0.15em] text-foreground/30 md:text-[9px]">
-                    Application
+                    <span
+                      dir="ltr"
+                      className="hidden bg-background/90 px-2 py-1 font-sans text-[9px] font-semibold uppercase tracking-[0.1em] text-foreground/50 sm:block"
+                    >
+                      {labels.outdoor}
+                    </span>
                   </div>
 
-                  <div className="mt-1.5 font-sans text-xs font-medium text-foreground/65 md:mt-2">
-                    Commercial
-                  </div>
-                </div>
+                  <div className="pointer-events-none absolute bottom-5 left-5 right-5 flex items-center justify-between gap-3">
+                    <span
+                      dir="ltr"
+                      className="bg-background/90 px-2 py-1 font-sans text-[9px] font-semibold uppercase tracking-[0.1em] text-foreground/65"
+                    >
+                      {profile.heading}
+                    </span>
 
-                <div>
-                  <div className="font-sans text-[8px] font-semibold uppercase tracking-[0.15em] text-foreground/30 md:text-[9px]">
-                    System
-                  </div>
-
-                  <div className="mt-1.5 font-sans text-xs font-medium text-foreground/65 md:mt-2">
-                    HVAC / VRF
-                  </div>
-                </div>
-
-                <div className="hidden md:block">
-                  <div className="font-sans text-[9px] font-semibold uppercase tracking-[0.15em] text-foreground/30">
-                    Documentation
-                  </div>
-
-                  <div className="mt-2 font-sans text-xs font-medium text-foreground/65">
-                    Specifications →
+                    <span
+                      dir="ltr"
+                      className="font-sans text-[9px] font-semibold tracking-[0.1em] text-foreground/45"
+                    >
+                      {String(index + 1).padStart(2, "0")} /{" "}
+                      {String(products.length).padStart(2, "0")}
+                    </span>
                   </div>
                 </div>
-              </div>
-            </a>
-          ))}
+
+                {/* PRODUCT INFORMATION */}
+                <div className="mt-4 grid gap-4 md:grid-cols-12 md:gap-5">
+                  {/* PRODUCT IDENTITY */}
+                  <div className="min-w-0 md:col-span-5">
+                    <div
+                      className={`font-sans text-[9px] font-semibold text-accent ${
+                        isRTL ? "" : "uppercase tracking-[0.14em]"
+                      }`}
+                    >
+                      {t.technicalProduct}
+                    </div>
+
+                    <h3
+                      className={`mt-2 font-display font-semibold ${
+                        isRTL
+                          ? "text-[clamp(1.8rem,2.8vw,3.1rem)] leading-[1.25]"
+                          : "text-[clamp(2rem,3.2vw,3.5rem)] leading-[0.9] tracking-[-0.05em]"
+                      }`}
+                    >
+                      {product.title}
+                    </h3>
+
+                    <div
+                      dir="ltr"
+                      className={`mt-2.5 flex flex-wrap items-center gap-2 font-sans text-[10px] font-medium tracking-[0.06em] text-foreground/45 ${
+                        isRTL ? "justify-end" : ""
+                      }`}
+                    >
+                      <span>{profile.manufacturer}</span>
+
+                      <span className="h-3 w-px bg-foreground/20" />
+
+                      <span>{product.series}</span>
+                    </div>
+                  </div>
+
+                  {/* DESCRIPTION / MANUFACTURER */}
+                  <div className="min-w-0 md:col-span-7">
+                    <p className="font-sans text-[13px] leading-[1.55] text-foreground/70">
+                      {profile.description}
+                    </p>
+
+                    <div className="mt-2.5 border-t border-foreground/10 pt-2.5">
+                      <span
+                        className={`font-sans text-[9px] font-semibold text-accent ${
+                          isRTL ? "" : "uppercase tracking-[0.12em]"
+                        }`}
+                      >
+                        {labels.manufacturerProfile}
+                      </span>
+
+                      <p className="mt-1 font-sans text-[11px] leading-[1.55] text-foreground/45">
+                        {profile.profile}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* ACTIONS */}
+                <div className="mt-auto pt-4">
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {/* TECHNICAL CATALOG */}
+                    <a
+                      href={profile.catalog}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex min-h-[46px] min-w-0 items-center justify-between gap-3 border border-foreground/15 px-3 py-2.5 transition-colors hover:border-accent hover:bg-accent/[0.035]"
+                    >
+                      <span className="flex min-w-0 items-center gap-2">
+                        <FileText
+                          size={16}
+                          strokeWidth={1.4}
+                          className="shrink-0 text-accent"
+                        />
+
+                        <span className="font-sans text-[11px] font-semibold">
+                          {labels.primaryCatalog}
+                        </span>
+                      </span>
+
+                      <span
+                        dir="ltr"
+                        className="shrink-0 font-sans text-[9px] font-semibold text-foreground/35"
+                      >
+                        PDF / {profile.catalogLanguage}
+                      </span>
+                    </a>
+
+                    {/* CONSULTATION */}
+                    <a
+                      href={inquiryHref}
+                      className={`flex min-h-[46px] min-w-0 items-center justify-between gap-3 bg-surface px-3 py-2.5 font-sans text-[11px] font-semibold text-background transition-colors hover:bg-accent ${
+                        isRTL ? "" : "uppercase tracking-[0.08em]"
+                      }`}
+                    >
+                      <span>{labels.inquiry}</span>
+
+                      <DirectionArrow
+                        size={16}
+                        strokeWidth={1.4}
+                        className="shrink-0"
+                      />
+                    </a>
+                  </div>
+
+                  {/* SECONDARY CATALOG */}
+                  {profile.secondaryCatalog && (
+                    <a
+                      href={profile.secondaryCatalog}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 inline-flex items-center gap-2 font-sans text-[10px] font-medium text-foreground/45 hover:text-accent"
+                    >
+                      <Download size={12} strokeWidth={1.4} />
+
+                      <span>{labels.secondaryCatalog}</span>
+
+                      <span dir="ltr" className="text-[9px] text-foreground/30">
+                        PDF / {profile.secondaryLanguage}
+                      </span>
+                    </a>
+                  )}
+                </div>
+              </article>
+            );
+          })}
         </div>
 
-        {/* =========================================================
-            PROGRESS
-            ========================================================= */}
-        <div className="flex items-center justify-between border-t border-foreground/10 px-5 py-4 md:px-10 md:py-5 lg:px-16">
-          <div className="font-sans text-[9px] font-semibold uppercase tracking-[0.16em] text-foreground/30 md:text-[10px]">
-            <span className="hidden sm:inline">Scroll to explore</span>
-            <span className="sm:hidden">Explore</span>
-          </div>
+        {/* PROGRESS */}
+        <div className="flex items-center justify-between border-t border-foreground/10 px-5 py-2.5 md:px-8">
+          <span
+            className={`font-sans text-[9px] font-semibold text-foreground/30 ${
+              isRTL ? "" : "uppercase tracking-[0.14em]"
+            }`}
+          >
+            {labels.scroll}
+          </span>
 
-          <div className="flex items-center gap-2.5">
-            <span className="font-display text-xs font-semibold tracking-[-0.02em]">
+          <div dir="ltr" className="flex items-center gap-2.5">
+            <span className="font-display text-xs font-semibold">
               {String(activeIndex + 1).padStart(2, "0")}
             </span>
 
-            <div className="h-px w-12 bg-foreground/10 md:w-32">
+            <div className="h-px w-12 bg-foreground/10 md:w-24">
               <div
                 className="h-px bg-accent transition-all duration-500"
                 style={{
@@ -471,7 +846,7 @@ export default function Products() {
               />
             </div>
 
-            <span className="font-display text-xs font-semibold tracking-[-0.02em] text-foreground/30">
+            <span className="font-display text-xs font-semibold text-foreground/30">
               {String(products.length).padStart(2, "0")}
             </span>
           </div>

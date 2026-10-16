@@ -1,129 +1,250 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { navigation } from "./data";
-import { useEffect } from "react";
+import { ArrowRight, ArrowLeft } from "lucide-react";
+import { useEffect, useRef } from "react";
+import type { RefObject } from "react";
+
+import type { Locale } from "@/i18n/config";
+import { localizeHref } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
 
 interface MobileMenuProps {
+  locale: Locale;
   open: boolean;
   onClose: () => void;
+  onEscape: () => void;
+  triggerRef: RefObject<HTMLButtonElement | null>;
 }
 
-const navigationPaths: Record<string, string> = {
-  Products: "/#products",
-  Projects: "/#projects",
-  About: "/#about",
-  Installation: "/installation",
-  Contact: "/#contact",
-};
+export default function MobileMenu({
+  locale,
+  open,
+  onClose,
+  onEscape,
+  triggerRef,
+}: MobileMenuProps) {
+  const t = getDictionary(locale);
+  const isRTL = locale === "fa";
 
-export default function MobileMenu({ open, onClose }: MobileMenuProps) {
+  const navigationRef = useRef<HTMLElement>(null);
+
+  const navItems = [
+    [t.nav.products, "/#products"],
+    [t.nav.projects, "/#projects"],
+    [t.nav.about, "/#about"],
+    [t.nav.installation, "/installation"],
+    [isRTL ? "نگهداری و سرویس" : "Maintenance", "/maintenance"],
+    [t.nav.contact, "/#contact"],
+  ] as const;
+
+  const DirectionArrow = isRTL ? ArrowLeft : ArrowRight;
+
+  // Lock background scrolling while the menu is open.
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    if (!open) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
 
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
     };
   }, [open]);
 
+  // Keyboard navigation and Escape handling.
+  useEffect(() => {
+    if (!open) return;
+
+    const menu = document.getElementById("tivasa-mobile-menu");
+
+    const firstLink =
+      navigationRef.current?.querySelector<HTMLAnchorElement>("a");
+
+    firstLink?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onEscape();
+        return;
+      }
+
+      if (event.key !== "Tab" || !menu) return;
+
+      const focusableElements = [
+        ...document.querySelectorAll<HTMLElement>(
+          "header a[href], header button:not([disabled]), #tivasa-mobile-menu a[href]",
+        ),
+      ].filter((element) => {
+        const style = window.getComputedStyle(element);
+
+        return (
+          element.getClientRects().length > 0 &&
+          style.visibility !== "hidden" &&
+          !element.closest("[inert]") &&
+          element.tabIndex >= 0
+        );
+      });
+
+      if (focusableElements.length === 0) return;
+
+      const first = focusableElements[0];
+      const last = focusableElements[focusableElements.length - 1];
+      const activeElement = document.activeElement;
+
+      if (event.shiftKey && activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open, onEscape, triggerRef]);
+
   return (
     <div
-      className={`fixed right-0 top-24 bottom-0 z-40 w-full overflow-hidden bg-surface text-background transition-transform duration-500 ease-[cubic-bezier(0.77,0,0.18,1)] ${
-        open ? "translate-x-0" : "translate-x-full"
-      }`}
+      id="tivasa-mobile-menu"
+      dir={isRTL ? "rtl" : "ltr"}
       aria-hidden={!open}
+      inert={!open}
+      className={`fixed inset-x-0 bottom-0 top-24 z-40 overflow-hidden bg-surface text-background transition-transform duration-500 ease-[cubic-bezier(0.77,0,0.18,1)] ${
+        open
+          ? "translate-x-0"
+          : isRTL
+            ? "-translate-x-full"
+            : "translate-x-full"
+      }`}
     >
-      {/* Thin opening signal line */}
+      {/* Opening signal line */}
       <div
-        className={`pointer-events-none absolute left-0 top-0 z-20 h-px bg-accent transition-all duration-500 ease-[cubic-bezier(0.77,0,0.18,1)] ${
-          open ? "w-full" : "w-0"
-        }`}
+        className={`pointer-events-none absolute top-0 z-20 h-px bg-accent transition-all duration-500 ease-[cubic-bezier(0.77,0,0.18,1)] ${
+          isRTL ? "right-0" : "left-0"
+        } ${open ? "w-full" : "w-0"}`}
       />
 
-      <div className="relative z-10 flex min-h-full flex-col">
-        <div className="flex flex-1 flex-col justify-between px-5 py-8 md:px-10 md:py-12">
+      {/* Scrollable menu content */}
+      <div className="relative z-10 h-full overflow-y-auto overscroll-contain [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.15)_transparent]">
+        <div className="flex min-h-full flex-col justify-between px-5 py-5 sm:py-7 md:px-10 md:py-9">
           {/* Navigation */}
-          <nav className="flex flex-col">
-            {navigation.map(([, label], index) => (
+          <nav
+            ref={navigationRef}
+            className="flex flex-col"
+            aria-label={isRTL ? "ناوبری موبایل" : "Mobile navigation"}
+          >
+            {navItems.map(([label, href], index) => (
               <Link
-                href={navigationPaths[label] ?? "/"}
-                key={label}
+                key={href}
+                href={localizeHref(href, locale)}
                 onClick={onClose}
                 tabIndex={open ? 0 : -1}
-                className={`group relative flex items-center justify-between border-b border-background/10 py-5 transition-all duration-400 ease-[cubic-bezier(0.77,0,0.18,1)] md:py-6 ${
+                className={`group relative flex items-center justify-between gap-4 border-b border-background/10 py-3.5 transition-[transform,opacity] duration-400 ease-[cubic-bezier(0.77,0,0.18,1)] sm:py-4 md:py-5 ${
                   open
                     ? "translate-x-0 opacity-100"
-                    : "-translate-x-6 opacity-0"
+                    : isRTL
+                      ? "translate-x-6 opacity-0"
+                      : "-translate-x-6 opacity-0"
                 }`}
                 style={{
-                  transitionDelay: open ? `${index * 70 + 100}ms` : "0ms",
+                  transitionDelay: open ? `${index * 65 + 100}ms` : "0ms",
                 }}
               >
                 {/* Active rail */}
-                <span className="absolute left-0 top-0 h-0 w-[2px] bg-accent transition-all duration-300 group-hover:h-full" />
+                <span
+                  className={`absolute top-0 h-0 w-[2px] bg-accent transition-all duration-300 group-hover:h-full ${
+                    isRTL ? "right-0" : "left-0"
+                  }`}
+                />
 
-                <div className="flex items-center">
-                  <span className="font-display text-[clamp(3.5rem,15vw,8rem)] font-semibold leading-[0.78] tracking-[-0.06em] transition-colors duration-300 group-hover:text-background/35">
-                    {label}
-                  </span>
-                </div>
+                {/* Navigation label */}
+                <span
+                  className={`min-w-0 font-display font-semibold transition-colors duration-300 group-hover:text-background/35 ${
+                    isRTL
+                      ? "text-[clamp(1.7rem,6.5vw,4.2rem)] leading-[1.4]"
+                      : "text-[clamp(2.2rem,8vw,5rem)] leading-[0.95] tracking-[-0.055em]"
+                  }`}
+                >
+                  {label}
+                </span>
 
-                {/* Direction indicator */}
-                <ArrowRight
-                  size={30}
+                {/* Mirrored direction indicator */}
+                <DirectionArrow
+                  size={26}
                   strokeWidth={1.25}
-                  className="mr-1 shrink-0 text-background/20 transition-all duration-300 group-hover:translate-x-1.5 group-hover:text-accent md:size-8"
+                  aria-hidden="true"
+                  className={`shrink-0 text-background/20 transition-all duration-300 group-hover:text-accent ${
+                    isRTL
+                      ? "group-hover:-translate-x-1.5"
+                      : "group-hover:translate-x-1.5"
+                  }`}
                 />
 
                 {/* Bottom technical line */}
-                <span className="absolute bottom-0 left-0 h-px w-0 bg-accent transition-all duration-300 group-hover:w-full" />
+                <span
+                  className={`absolute bottom-0 h-px w-0 bg-accent transition-all duration-300 group-hover:w-full ${
+                    isRTL ? "right-0" : "left-0"
+                  }`}
+                />
               </Link>
             ))}
           </nav>
 
-          {/* Technical information — compact footer */}
+          {/* Technical information footer */}
           <div
-            className={`mt-8 border-t border-background/10 pt-4 font-sans text-[9px] font-medium uppercase tracking-[0.14em] transition-all duration-300 ease-[cubic-bezier(0.77,0,0.18,1)] ${
+            className={`mt-8 shrink-0 border-t border-background/10 pt-4 font-sans text-[9px] font-medium transition-[transform,opacity] duration-300 ease-[cubic-bezier(0.77,0,0.18,1)] ${
+              isRTL ? "tracking-normal" : "uppercase tracking-[0.14em]"
+            } ${
               open ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
             }`}
             style={{
-              transitionDelay: open ? "380ms" : "0ms",
+              transitionDelay: open ? "450ms" : "0ms",
             }}
           >
-            {/* Compact system header */}
             <div className="mb-3 flex items-center justify-between text-background/25">
-              <span>SYSTEM / INFORMATION</span>
+              <span>{t.mobile.system}</span>
 
               <span className="flex items-center gap-2">
                 <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-                ACTIVE
+                {t.mobile.active}
               </span>
             </div>
 
-            {/* Single-line technical data */}
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-background/10 pt-3">
               <div className="flex items-center gap-2">
-                <span className="text-background/25">LOC</span>
-                <span className="text-background/60">TEHRAN / IRAN</span>
+                <span className="text-background/25">
+                  {isRTL ? "موقعیت" : "LOC"}
+                </span>
+
+                <span className="text-background/60">{t.mobile.location}</span>
               </div>
 
               <span className="hidden h-3 w-px bg-background/10 sm:block" />
 
               <div className="flex items-center gap-2">
-                <span className="text-background/25">DIV</span>
-                <span className="text-background/60">ENGINEERING</span>
+                <span className="text-background/25">
+                  {isRTL ? "حوزه" : "DIV"}
+                </span>
+
+                <span className="text-background/60">{t.mobile.division}</span>
               </div>
 
               <span className="hidden h-3 w-px bg-background/10 sm:block" />
 
               <div className="flex items-center gap-2">
-                <span className="text-background/25">STATUS</span>
-                <span className="font-semibold text-accent">AVAILABLE</span>
+                <span className="text-background/25">
+                  {isRTL ? "وضعیت" : "STATUS"}
+                </span>
+
+                <span className="font-semibold text-accent">
+                  {t.mobile.available}
+                </span>
               </div>
             </div>
           </div>
