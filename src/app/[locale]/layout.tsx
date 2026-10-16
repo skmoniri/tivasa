@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import type { Metadata } from "next";
 
 import localFont from "next/font/local";
-import { Estedad } from "next/font/google";
 import { notFound } from "next/navigation";
 
 import Header from "@/app/components/sections/Header";
@@ -27,11 +26,12 @@ const ibmPlexSans = localFont({
   weight: "100 700",
 });
 
-const estedad = Estedad({
-  subsets: ["arabic", "latin"],
-  weight: "variable",
-  display: "swap",
+const estedad = localFont({
+  src: "../fonts/Estedad[wght].woff2",
   variable: "--font-estedad",
+  display: "swap",
+  weight: "100 900",
+  adjustFontFallback: false,
 });
 
 export const metadata: Metadata = {

@@ -1,6 +1,4 @@
 import { ImageResponse } from "next/og";
-import { readFile } from "node:fs/promises";
-import path from "node:path";
 
 import { isLocale } from "@/i18n/config";
 
@@ -27,10 +25,6 @@ export default async function OpenGraphImage({
   if (!isLocale(locale)) {
     throw new Error("Invalid locale");
   }
-
-  const isPersian = locale === "fa";
-
-  const persianFont = null;
 
   return new ImageResponse(
     <div
@@ -78,7 +72,7 @@ export default async function OpenGraphImage({
         style={{
           display: "flex",
           flexDirection: "column",
-          alignItems: isPersian ? "flex-end" : "flex-start",
+          alignItems: "flex-start",
           gap: 24,
           width: "100%",
         }}
@@ -91,53 +85,32 @@ export default async function OpenGraphImage({
           }}
         />
 
-        {isPersian ? (
-          <div
-            dir="rtl"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-              alignItems: "flex-start",
-              fontFamily: "Lahzeh",
-              fontSize: 72,
-              fontWeight: 700,
-              lineHeight: 1.4,
-              textAlign: "right",
-            }}
-          >
-            <span style={{ width: "100%" }}>نصب و راه‌اندازی</span>
-
-            <span style={{ width: "100%" }}>سیستم‌های VRF</span>
-          </div>
-        ) : (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              fontSize: 76,
-              fontWeight: 700,
-              lineHeight: 1.08,
-              letterSpacing: -3,
-            }}
-          >
-            <span>VRF INSTALLATION</span>
-            <span>& COMMISSIONING</span>
-          </div>
-        )}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            fontSize: 76,
+            fontWeight: 700,
+            lineHeight: 1.08,
+            letterSpacing: -3,
+          }}
+        >
+          <span>VRF INSTALLATION</span>
+          <span>&amp; COMMISSIONING</span>
+        </div>
 
         {/* Subtitle */}
         <div
           style={{
             width: "100%",
-            fontSize: isPersian ? 28 : 23,
+            fontSize: 23,
             opacity: 0.65,
-            letterSpacing: isPersian ? 0 : 2,
-            fontFamily: isPersian ? "Lahzeh" : "sans-serif",
-            textAlign: isPersian ? "right" : "left",
+            letterSpacing: 2,
+            fontFamily: "sans-serif",
+            textAlign: "left",
           }}
         >
-          {isPersian ? "مهندسی پیش از اجرا" : "ENGINEERING BEFORE EXECUTION"}
+          ENGINEERING BEFORE EXECUTION
         </div>
       </div>
 
@@ -159,18 +132,6 @@ export default async function OpenGraphImage({
     </div>,
     {
       ...size,
-      ...(persianFont
-        ? {
-            fonts: [
-              {
-                name: "Lahzeh",
-                data: persianFont,
-                style: "normal" as const,
-                weight: 700 as const,
-              },
-            ],
-          }
-        : {}),
     },
   );
 }
