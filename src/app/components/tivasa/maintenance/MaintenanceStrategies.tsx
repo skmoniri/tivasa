@@ -1,5 +1,7 @@
+
 "use client";
 
+import Image from "next/image";
 import { ArrowUpLeft, ArrowUpRight } from "lucide-react";
 
 import type { Locale } from "@/i18n/config";
@@ -9,11 +11,25 @@ interface MaintenanceStrategiesProps {
   locale: Locale;
 }
 
+const inspectionLabels = {
+  en: {
+    title: "Equipment Inspection",
+    detail: "HVAC / Internal Components",
+    alt: "Open ceiling cassette HVAC unit showing its internal fan, insulation, wiring and mechanical components",
+  },
+  fa: {
+    title: "بازرسی تجهیزات",
+    detail: "HVAC / قطعات داخلی",
+    alt: "نمای داخلی یونیت کاستی سقفی شامل فن، عایق‌کاری، سیم‌کشی و اجزای مکانیکی",
+  },
+} as const;
+
 export default function MaintenanceStrategies({
   locale,
 }: MaintenanceStrategiesProps) {
   const isRTL = locale === "fa";
   const t = getMaintenanceContent(locale).strategies;
+  const inspection = inspectionLabels[locale];
 
   const DirectionArrow = isRTL ? ArrowUpLeft : ArrowUpRight;
 
@@ -34,12 +50,15 @@ export default function MaintenanceStrategies({
             }`}
           >
             <div className={`relative ${isRTL ? "pr-4" : "pl-4"}`}>
+              {/* RED VERTICAL RAIL */}
               <span
+                aria-hidden="true"
                 className={`absolute inset-y-0 w-px bg-accent ${
                   isRTL ? "right-0" : "left-0"
                 }`}
               />
 
+              {/* SECTION LABEL */}
               <div className="flex items-center gap-2">
                 <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
 
@@ -52,6 +71,7 @@ export default function MaintenanceStrategies({
                 </span>
               </div>
 
+              {/* SECTION DESCRIPTION */}
               <p className="mt-4 max-w-[240px] font-sans text-sm leading-6 text-foreground/45">
                 {t.description}
               </p>
@@ -60,6 +80,7 @@ export default function MaintenanceStrategies({
 
           {/* MAIN CONTENT */}
           <div className="tivasa-about-reveal min-w-0 px-6 py-9 md:px-10 md:py-11 lg:col-span-9 lg:px-12 lg:py-12">
+            {/* MAIN HEADING */}
             <h2
               id="maintenance-strategies-title"
               className={`max-w-6xl font-display font-semibold ${
@@ -69,6 +90,7 @@ export default function MaintenanceStrategies({
               }`}
             >
               {t.title}
+
               <br />
 
               <span
@@ -80,23 +102,97 @@ export default function MaintenanceStrategies({
               </span>
             </h2>
 
-            {/* SUPPORTING TEXT */}
-            <div className="mt-7 flex flex-wrap items-start justify-between gap-5 border-t border-foreground/10 pt-5">
-              <p className="max-w-xl font-sans text-sm leading-7 text-foreground/55">
-                {t.description}
-              </p>
+            {/*
+              SUPPORTING CONTENT + TECHNICAL PHOTOGRAPH
 
-              <div className="flex shrink-0 items-center gap-3">
-                <span className="h-px w-7 bg-accent" />
+              Desktop: description left, image right.
+              Mobile: stacked naturally.
 
-                <span
-                  className={`font-sans text-[10px] font-semibold text-foreground/35 ${
-                    isRTL ? "" : "uppercase tracking-[0.15em]"
-                  }`}
-                >
-                  {isRTL ? "سه رویکرد نگهداری" : "Three maintenance approaches"}
-                </span>
+              The photograph stays contained instead of
+              becoming another full-width background.
+            */}
+            <div className="mt-7 grid gap-6 border-t border-foreground/10 pt-5 md:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] md:items-start md:gap-8">
+              {/* SUPPORTING TEXT */}
+              <div className="flex min-w-0 flex-col items-start justify-between gap-6">
+                <p className="max-w-xl font-sans text-sm leading-7 text-foreground/55">
+                  {t.description}
+                </p>
+
+                {/* THREE APPROACHES IDENTIFIER */}
+                <div className="flex items-center gap-3">
+                  <span className="h-px w-7 bg-accent" />
+
+                  <span
+                    className={`font-sans text-[10px] font-semibold text-foreground/35 ${
+                      isRTL ? "" : "uppercase tracking-[0.15em]"
+                    }`}
+                  >
+                    {isRTL
+                      ? "سه رویکرد نگهداری"
+                      : "Three maintenance approaches"}
+                  </span>
+                </div>
               </div>
+
+              {/* OPEN HVAC CASSETTE PHOTO */}
+              <figure className="group/inspection min-w-0">
+                <div className="relative h-[175px] overflow-hidden border border-foreground/10 bg-foreground/[0.035] sm:h-[195px] md:h-[185px] lg:h-[205px]">
+                  <Image
+                    src="/Open-HVAC-cassette.png"
+                    alt={inspection.alt}
+                    fill
+                    sizes="(max-width: 767px) 100vw, (max-width: 1023px) 45vw, 35vw"
+                    className="object-cover object-center transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/inspection:scale-[1.045]"
+                  />
+
+                  {/* SUBTLE INNER FRAME */}
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-2 border border-white/20"
+                  />
+
+                  {/* TOP TECHNICAL IDENTIFIER */}
+                  <div
+                    className={`pointer-events-none absolute top-3 flex items-center gap-2 bg-[#102236]/85 px-3 py-2 ${
+                      isRTL ? "right-3" : "left-3"
+                    }`}
+                  >
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+
+                    <span
+                      dir="ltr"
+                      className="font-sans text-[9px] font-semibold uppercase tracking-[0.14em] text-white"
+                    >
+                      HVAC / INSPECTION
+                    </span>
+                  </div>
+
+                  {/* RED CORNER ACCENT */}
+                  <span
+                    aria-hidden="true"
+                    className={`pointer-events-none absolute bottom-0 h-[3px] w-14 bg-accent ${
+                      isRTL ? "right-0" : "left-0"
+                    }`}
+                  />
+                </div>
+
+                {/* IMAGE CAPTION */}
+                <figcaption className="mt-2 flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+                  <span
+                    className={`font-sans text-[10px] font-semibold text-foreground/65 ${
+                      isRTL ? "" : "uppercase tracking-[0.08em]"
+                    }`}
+                  >
+                    {inspection.title}
+                  </span>
+
+                  <span
+                    className="font-sans text-[9px] font-medium text-foreground/35"
+                  >
+                    {inspection.detail}
+                  </span>
+                </figcaption>
+              </figure>
             </div>
           </div>
         </div>

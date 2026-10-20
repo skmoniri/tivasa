@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState, type TouchEvent } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpLeft, ArrowUpRight } from "lucide-react";
 
 import type { Locale } from "@/i18n/config";
@@ -48,6 +48,7 @@ export default function InstallationProcess({ locale }: Props) {
   const { installationSteps } = getInstallationData(locale);
 
   const [activeStep, setActiveStep] = useState(0);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
   const totalSteps = installationSteps.length;
   const currentStep = installationSteps[activeStep];
 
@@ -60,6 +61,36 @@ export default function InstallationProcess({ locale }: Props) {
   const PreviousArrow = isRTL ? ArrowRight : ArrowLeft;
   const NextArrow = isRTL ? ArrowLeft : ArrowRight;
   const DetailArrow = isRTL ? ArrowUpLeft : ArrowUpRight;
+
+  // Physical swipe direction is identical in both languages.
+  // Swipe left = next stage; swipe right = previous stage.
+  const handleTouchStart = (event: TouchEvent<HTMLDivElement>) => {
+    if (event.touches.length !== 1) {
+      touchStart.current = null;
+      return;
+    }
+    touchStart.current = {
+      x: event.touches[0].clientX,
+      y: event.touches[0].clientY,
+    };
+  };
+
+  const handleTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
+    const start = touchStart.current;
+    touchStart.current = null;
+    if (!start || event.changedTouches.length === 0) return;
+
+    const deltaX = event.changedTouches[0].clientX - start.x;
+    const deltaY = event.changedTouches[0].clientY - start.y;
+    if (Math.abs(deltaX) < 45 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+
+    if (deltaX < 0) goToNext();
+    else goToPrevious();
+  };
+
+  const handleTouchCancel = () => {
+    touchStart.current = null;
+  };
 
   return (
     <section
@@ -214,6 +245,10 @@ export default function InstallationProcess({ locale }: Props) {
               id="installation-stage-panel"
               role="region"
               aria-label={t.panelLabel}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+              onTouchCancel={handleTouchCancel}
+              style={{ touchAction: "pan-y" }}
               className="relative flex min-h-[330px] flex-1 flex-col border-b border-background/15 bg-foreground md:min-h-[300px] lg:min-h-[310px]"
             >
               <div

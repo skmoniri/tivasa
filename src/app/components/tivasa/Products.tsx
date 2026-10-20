@@ -27,13 +27,26 @@ interface ProductsProps {
   locale: Locale;
 }
 
-const EMAIL = "Tetacompany1@gmail.com";
-
 const DRAG_THRESHOLD = 5;
 const FRICTION = 0.94;
 const MIN_VELOCITY = 0.12;
 const MAX_VELOCITY = 2.4;
 const MOMENTUM_MULTIPLIER = 1.0;
+
+const PRODUCT_TABS = ["TIVA", "TCL", "MIDEA"] as const;
+
+// Exact filenames as provided from /public/catalogs.
+// TCL's filename contains non-breaking spaces (U+00A0).
+const CATALOG_FILES = {
+  tiva: "Catalogue VRF by TETA.pdf",
+  tica: "TICA-VRF-catalogue.pdf",
+  tcl: "TCL\u00A0VRF\u00A0TMV6\u00A0Catalogue.pdf",
+  midea: "Catalogo VRF Midea-V8 - by TETA.pdf",
+} as const;
+
+const catalogPath = (filename: string) =>
+  `/catalogs/${encodeURIComponent(filename)}`;
+
 
 export default function Products({ locale }: ProductsProps) {
   const isRTL = locale === "fa";
@@ -43,11 +56,19 @@ export default function Products({ locale }: ProductsProps) {
   const catalogData = getProductCatalogs(locale);
   const labels = catalogData.labels;
 
+  const slogan = isRTL
+    ? { first: "فراتر از سرمایش.", second: "فراتر از انتظار." }
+    : { first: "Beyond cooling.", second: "Beyond expectations." };
+
+  const productTabName = (index: number) =>
+    PRODUCT_TABS[index] ?? products[index]?.title ?? String(index + 1);
+
   const DirectionArrow = isRTL ? ArrowUpLeft : ArrowUpRight;
   const PreviousArrow = isRTL ? ArrowRight : ArrowLeft;
   const NextArrow = isRTL ? ArrowLeft : ArrowRight;
 
   const scrollRef = useRef<HTMLDivElement>(null);
+  const tabsRef = useRef<(HTMLButtonElement | null)[]>([]);
   const cardRefs = useRef<(HTMLElement | null)[]>([]);
 
   const dragRef = useRef({
@@ -67,6 +88,66 @@ export default function Products({ locale }: ProductsProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [isGliding, setIsGliding] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  // Keep disabled attributes identical for SSR and the first browser render.
+  const [hydrated, setHydrated] = useState(false);
+  const [catalogError, setCatalogError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  const downloadCatalog = useCallback(
+    async (event: ReactMouseEvent<HTMLAnchorElement>, filename: string) => {
+      event.preventDefault();
+      setCatalogError(null);
+
+      // Test both normal and non-breaking spaces. These two filenames look
+      // almost identical in Windows Explorer, but are different URLs.
+      const candidates = Array.from(
+        new Set([
+          filename,
+          filename.replace(/\u00A0/g, " "),
+          filename.replace(/ /g, "\u00A0"),
+        ]),
+      );
+
+      let downloaded = false;
+      for (const candidate of candidates) {
+        try {
+          const response = await fetch(catalogPath(candidate), {
+            cache: "no-store",
+          });
+          if (!response.ok) continue;
+
+          const blob = await response.blob();
+          if (blob.size === 0) continue;
+          if ((await blob.slice(0, 5).text()) !== "%PDF-") continue;
+
+          const url = URL.createObjectURL(blob);
+          const anchor = document.createElement("a");
+          anchor.href = url;
+          anchor.download = candidate.replace(/\u00A0/g, " ");
+          document.body.appendChild(anchor);
+          anchor.click();
+          anchor.remove();
+          window.setTimeout(() => URL.revokeObjectURL(url), 5000);
+          downloaded = true;
+          break;
+        } catch {
+          // Try alternate filename spellings, then show a useful error.
+        }
+      }
+
+      if (!downloaded) {
+        setCatalogError(
+          isRTL
+            ? `فایل «${filename.replace(/\u00A0/g, " ")}» در مسیر public/catalogs پیدا نشد. نام فایل را بررسی کنید.`
+            : `Could not find "${filename.replace(/\u00A0/g, " ")}" in public/catalogs. Check its exact filename.`,
+        );
+      }
+    },
+    [isRTL],
+  );
 
   const cancelMotion = useCallback(() => {
     if (animationRef.current !== null) {
@@ -438,7 +519,7 @@ export default function Products({ locale }: ProductsProps) {
               />
 
               <div className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 bg-accent" />
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
 
                 <span
                   className={`font-sans text-sm font-semibold text-accent ${
@@ -460,13 +541,13 @@ export default function Products({ locale }: ProductsProps) {
               <h2
                 className={`font-display font-semibold ${
                   isRTL
-                    ? "text-[clamp(2.2rem,3.7vw,4.2rem)] leading-[1.25]"
-                    : "text-[clamp(2.8rem,4.6vw,5.1rem)] leading-[0.86] tracking-[-0.06em]"
+                    ? "text-[clamp(1.9rem,3.5vw,3.9rem)] leading-[1.3]"
+                    : "text-[clamp(2.1rem,4.1vw,4.5rem)] leading-[1.02] tracking-[-0.045em]"
                 }`}
               >
-                {t.headingFirst}
+                {slogan.first}
                 <br />
-                <span className="font-normal">{t.headingSecond}</span>
+                <span className="font-normal">{slogan.second}</span>
               </h2>
 
               <p className="max-w-lg font-sans text-[13px] leading-6 text-foreground/55">
@@ -511,19 +592,8 @@ export default function Products({ locale }: ProductsProps) {
                           : "text-foreground/35 hover:text-foreground"
                       }`}
                     >
-                      <span
-                        dir="ltr"
-                        className={
-                          isActive ? "text-accent" : "text-foreground/30"
-                        }
-                      >
-                        {product.number}
-                      </span>
-
-                      <span
-                        className={isRTL ? "" : "uppercase tracking-[0.1em]"}
-                      >
-                        {product.title}
+                      <span dir="ltr" className="uppercase tracking-[0.1em]">
+                        {productTabName(index)}
                       </span>
 
                       <span
@@ -544,13 +614,13 @@ export default function Products({ locale }: ProductsProps) {
                   key={product.number}
                   type="button"
                   onClick={() => selectProduct(index)}
-                  aria-label={`${t.goToAria} ${product.number}`}
+                  aria-label={`${t.goToAria} ${productTabName(index)}`}
                   aria-current={activeIndex === index ? "true" : undefined}
-                  className={`relative flex h-[44px] flex-1 items-center justify-center font-sans text-xs font-semibold ${
+                  className={`relative flex h-[44px] min-w-0 flex-1 items-center justify-center px-1 font-sans text-[11px] font-semibold sm:text-xs ${
                     activeIndex === index ? "text-accent" : "text-foreground/30"
                   }`}
                 >
-                  <span dir="ltr">{product.number}</span>
+                  <span dir="ltr" className="uppercase tracking-[0.06em]">{productTabName(index)}</span>
 
                   <span
                     className={`absolute inset-x-2 bottom-0 h-px bg-accent ${
@@ -573,7 +643,7 @@ export default function Products({ locale }: ProductsProps) {
                 type="button"
                 aria-label={t.previousAria}
                 onClick={() => moveProduct("previous")}
-                disabled={activeIndex === 0}
+                disabled={hydrated && activeIndex === 0}
                 className={`flex h-[44px] w-[44px] items-center justify-center text-foreground/50 hover:text-accent disabled:opacity-20 ${
                   isRTL
                     ? "border-l border-foreground/10"
@@ -587,7 +657,7 @@ export default function Products({ locale }: ProductsProps) {
                 type="button"
                 aria-label={t.nextAria}
                 onClick={() => moveProduct("next")}
-                disabled={activeIndex === products.length - 1}
+                disabled={hydrated && activeIndex === products.length - 1}
                 className="flex h-[44px] w-[44px] items-center justify-center text-foreground/50 hover:text-accent disabled:opacity-20"
               >
                 <NextArrow size={16} strokeWidth={1.4} />
@@ -605,24 +675,25 @@ export default function Products({ locale }: ProductsProps) {
           onPointerUp={finishDrag}
           onPointerCancel={finishDrag}
           onClickCapture={handleCarouselClick}
-          className={`flex gap-px overflow-x-auto overscroll-x-contain bg-foreground/10 select-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+          className={`flex snap-x snap-proximity gap-px overflow-x-auto overscroll-x-contain bg-foreground/10 select-none [scrollbar-width:none] [-webkit-overflow-scrolling:touch] [&::-webkit-scrollbar]:hidden ${
             isDragging ? "cursor-grabbing" : "cursor-grab"
           }`}
           style={{
-            touchAction: "pan-y",
+            touchAction: "auto",
             scrollBehavior: "auto",
           }}
         >
           {products.map((product, index) => {
             const profile = catalogData.profiles[index];
-
-            const subject = isRTL
-              ? `درخواست مشاوره - ${product.title}`
-              : `Product Consultation - ${product.title}`;
-
-            const inquiryHref = `mailto:${EMAIL}?subject=${encodeURIComponent(
-              subject,
-            )}`;
+            const primaryCatalogFile =
+              index === 0
+                ? CATALOG_FILES.tiva
+                : index === 1
+                  ? CATALOG_FILES.tcl
+                  : CATALOG_FILES.midea;
+            // Fourth PDF is offered alongside the TIVA catalog.
+            const secondaryCatalogFile =
+              index === 0 ? CATALOG_FILES.tica : null;
 
             return (
               <article
@@ -757,9 +828,9 @@ export default function Products({ locale }: ProductsProps) {
                   <div className="grid gap-2 sm:grid-cols-2">
                     {/* TECHNICAL CATALOG */}
                     <a
-                      href={profile.catalog}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href={catalogPath(primaryCatalogFile)}
+                      download
+                      onClick={(event) => downloadCatalog(event, primaryCatalogFile)}
                       className="flex min-h-[46px] min-w-0 items-center justify-between gap-3 border border-foreground/15 px-3 py-2.5 transition-colors hover:border-accent hover:bg-accent/[0.035]"
                     >
                       <span className="flex min-w-0 items-center gap-2">
@@ -784,7 +855,7 @@ export default function Products({ locale }: ProductsProps) {
 
                     {/* CONSULTATION */}
                     <a
-                      href={inquiryHref}
+                      href="#contact"
                       className={`flex min-h-[46px] min-w-0 items-center justify-between gap-3 bg-surface px-3 py-2.5 font-sans text-[11px] font-semibold text-background transition-colors hover:bg-accent ${
                         isRTL ? "" : "uppercase tracking-[0.08em]"
                       }`}
@@ -800,19 +871,19 @@ export default function Products({ locale }: ProductsProps) {
                   </div>
 
                   {/* SECONDARY CATALOG */}
-                  {profile.secondaryCatalog && (
+                  {secondaryCatalogFile && (
                     <a
-                      href={profile.secondaryCatalog}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href={catalogPath(secondaryCatalogFile)}
+                      download
+                      onClick={(event) => downloadCatalog(event, secondaryCatalogFile)}
                       className="mt-2 inline-flex items-center gap-2 font-sans text-[10px] font-medium text-foreground/45 hover:text-accent"
                     >
                       <Download size={12} strokeWidth={1.4} />
 
-                      <span>{labels.secondaryCatalog}</span>
+                      <span>{isRTL ? "کاتالوگ TICA" : "TICA Catalog"}</span>
 
                       <span dir="ltr" className="text-[9px] text-foreground/30">
-                        PDF / {profile.secondaryLanguage}
+                        PDF / TICA
                       </span>
                     </a>
                   )}
@@ -821,6 +892,12 @@ export default function Products({ locale }: ProductsProps) {
             );
           })}
         </div>
+
+        {catalogError && (
+          <p role="alert" className="border-t border-foreground/10 px-5 py-3 font-sans text-xs text-red-600 md:px-8">
+            {catalogError}
+          </p>
+        )}
 
         {/* PROGRESS */}
         <div className="flex items-center justify-between border-t border-foreground/10 px-5 py-2.5 md:px-8">

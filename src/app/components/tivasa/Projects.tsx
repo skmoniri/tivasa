@@ -20,9 +20,9 @@ interface ProjectsProps {
 }
 
 const MANUFACTURER_COLORS: Record<string, string> = {
-  GREE: "#22C55E",
+  GREE: "#0769AD",
   VICA: "#EAB308",
-  TICA: "#EAB308",
+  TICA: "#D71920",
   MIDEA: "#3B82F6",
   TCL: "#EF4444",
 };
@@ -185,7 +185,7 @@ export default function Projects({ locale }: ProjectsProps) {
       return;
     }
 
-    const next = isRTL ? deltaX > 0 : deltaX < 0;
+    const next = deltaX > 0;
 
     if (next) goNext();
     else goPrevious();
@@ -199,7 +199,7 @@ export default function Projects({ locale }: ProjectsProps) {
 
     wheelLocked.current = true;
 
-    const next = isRTL ? event.deltaX < 0 : event.deltaX > 0;
+    const next = event.deltaX < 0;
 
     if (next) goNext();
     else goPrevious();

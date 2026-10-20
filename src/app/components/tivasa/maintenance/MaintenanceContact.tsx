@@ -1,9 +1,31 @@
-import { ArrowUpLeft, ArrowUpRight, Mail } from "lucide-react";
+
+import {
+  ArrowUpLeft,
+  ArrowUpRight,
+  Mail,
+  FileText,
+  Download,
+} from "lucide-react";
 
 import type { Locale } from "@/i18n/config";
 import { getMaintenanceContent } from "@/i18n/maintenance";
 
 const EMAIL = "Tetacompany1@gmail.com";
+
+const BROCHURES = {
+  en: {
+    url: "/catalogs/TETA_Reliable_Facility_Care_EN_Original_Style.pdf",
+    filename: "TETA_Reliable_Facility_Care_EN.pdf",
+    label: "Download Maintenance Brochure",
+    aria: "Download the English maintenance brochure PDF",
+  },
+  fa: {
+    url: "/catalogs/TETA_Reliable_Facility_Care_FA.pdf",
+    filename: "TETA_Reliable_Facility_Care_FA.pdf",
+    label: "دانلود کاتالوگ خدمات نگهداری",
+    aria: "دانلود فایل PDF برنامه نگهداری به زبان فارسی",
+  },
+} as const;
 
 interface MaintenanceContactProps {
   locale: Locale;
@@ -14,6 +36,7 @@ export default function MaintenanceContact({
 }: MaintenanceContactProps) {
   const isRTL = locale === "fa";
   const t = getMaintenanceContent(locale).contact;
+  const brochure = BROCHURES[locale];
 
   const DirectionArrow = isRTL ? ArrowUpLeft : ArrowUpRight;
 
@@ -29,7 +52,10 @@ export default function MaintenanceContact({
       className="relative scroll-mt-24 overflow-hidden bg-surface text-background"
     >
       {/* SUBTLE BACKGROUND STRUCTURE */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+      >
         <div className="absolute inset-y-0 left-1/2 w-px bg-background/[0.025]" />
 
         <div className="absolute right-0 top-0 h-40 w-40 border-b border-l border-background/[0.035]" />
@@ -37,13 +63,18 @@ export default function MaintenanceContact({
 
       <div className="relative mx-auto max-w-[1800px]">
         <div className="grid lg:grid-cols-12">
+
           {/* SECTION MARKER */}
           <aside
             className={`border-b border-background/15 p-6 lg:col-span-3 lg:border-b-0 lg:p-8 ${
               isRTL ? "lg:border-l" : "lg:border-r"
             }`}
           >
-            <div className={`relative ${isRTL ? "pr-5" : "pl-5"}`}>
+            <div
+              className={`relative ${
+                isRTL ? "pr-5" : "pl-5"
+              }`}
+            >
               {/* RED VERTICAL RAIL */}
               <span
                 aria-hidden="true"
@@ -52,12 +83,15 @@ export default function MaintenanceContact({
                 }`}
               />
 
+              {/* SECTION LABEL */}
               <div className="flex items-center gap-3">
                 <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
 
                 <span
                   className={`font-sans text-sm font-semibold text-accent ${
-                    isRTL ? "" : "uppercase tracking-[0.16em]"
+                    isRTL
+                      ? ""
+                      : "uppercase tracking-[0.16em]"
                   }`}
                 >
                   {t.eyebrow}
@@ -85,11 +119,14 @@ export default function MaintenanceContact({
 
           {/* MAIN CONTENT */}
           <div className="min-w-0 lg:col-span-9">
+
             {/* EDITORIAL STATEMENT */}
             <div className="px-6 pb-7 pt-9 md:px-10 lg:px-12 lg:pt-11">
               <span
                 className={`font-sans text-[10px] font-semibold text-accent ${
-                  isRTL ? "" : "uppercase tracking-[0.18em]"
+                  isRTL
+                    ? ""
+                    : "uppercase tracking-[0.18em]"
                 }`}
               >
                 {t.eyebrow}
@@ -104,6 +141,7 @@ export default function MaintenanceContact({
                 }`}
               >
                 {t.title}
+
                 <br />
 
                 <span className="font-normal text-background/40">
@@ -112,8 +150,9 @@ export default function MaintenanceContact({
               </h2>
             </div>
 
-            {/* CONTACT ACTION ROW */}
-            <div className="grid gap-6 border-t border-background/15 px-6 py-6 md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:px-10 lg:px-12">
+            {/* DESCRIPTION + ACTIONS */}
+            <div className="grid gap-6 border-t border-background/15 px-6 py-6 md:px-10 lg:px-12 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-center">
+
               {/* DESCRIPTION */}
               <div className="max-w-xl">
                 <p className="font-sans text-sm leading-7 text-background/65">
@@ -125,28 +164,80 @@ export default function MaintenanceContact({
                 </p>
               </div>
 
-              {/* PRIMARY CTA */}
-              <a
-                href={mailto}
-                className="group relative inline-flex min-h-[58px] min-w-[220px] items-center justify-between gap-8 overflow-hidden bg-accent px-6 font-sans text-sm font-semibold text-white transition-colors duration-200 hover:bg-background hover:text-surface focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
-              >
-                <span className="relative z-10">{t.action}</span>
+              {/* ACTION BUTTONS */}
+              <div className="flex min-w-0 flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center xl:justify-end">
 
-                <DirectionArrow
-                  size={20}
-                  strokeWidth={1.75}
-                  aria-hidden="true"
-                  className="relative z-10 shrink-0 transition-transform duration-200 group-hover:-translate-y-0.5"
-                />
+                {/* MAINTENANCE BROCHURE DOWNLOAD */}
+                <a
+                  href={brochure.url}
+                  download={brochure.filename}
+                  type="application/pdf"
+                  aria-label={brochure.aria}
+                  className="group/brochure inline-flex min-h-[52px] min-w-0 max-w-full items-center justify-between gap-5 border border-background/25 px-4 py-3 transition-[border-color,background-color] duration-300 hover:border-accent hover:bg-background/[0.045] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+                >
+                  {/* ICON + LABEL */}
+                  <span className="flex min-w-0 items-center gap-3">
+                    <FileText
+                      size={17}
+                      strokeWidth={1.4}
+                      aria-hidden="true"
+                      className="shrink-0 text-accent"
+                    />
 
-                {/* BUTTON ACCENT */}
-                <span
-                  aria-hidden="true"
-                  className={`absolute bottom-0 h-[3px] w-12 bg-white/35 transition-colors duration-200 group-hover:bg-accent ${
-                    isRTL ? "right-0" : "left-0"
-                  }`}
-                />
-              </a>
+                    <span
+                      className={`font-sans text-[11px] font-semibold text-background transition-colors duration-300 group-hover/brochure:text-accent ${
+                        isRTL
+                          ? ""
+                          : "uppercase tracking-[0.06em]"
+                      }`}
+                    >
+                      {brochure.label}
+                    </span>
+                  </span>
+
+                  {/* PDF IDENTIFIER + DOWNLOAD ICON */}
+                  <span className="flex shrink-0 items-center gap-2">
+                    <span
+                      dir="ltr"
+                      className="font-sans text-[9px] font-semibold tracking-[0.08em] text-background/40"
+                    >
+                      PDF
+                    </span>
+
+                    <Download
+                      size={15}
+                      strokeWidth={1.4}
+                      aria-hidden="true"
+                      className="text-background/50 transition-[color,transform] duration-300 group-hover/brochure:translate-y-0.5 group-hover/brochure:text-accent"
+                    />
+                  </span>
+                </a>
+
+                {/* PRIMARY CONSULTATION CTA */}
+                <a
+                  href={mailto}
+                  className="group relative inline-flex min-h-[52px] min-w-[200px] items-center justify-between gap-6 overflow-hidden bg-accent px-5 font-sans text-sm font-semibold text-white transition-colors duration-200 hover:bg-background hover:text-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+                >
+                  <span className="relative z-10">
+                    {t.action}
+                  </span>
+
+                  <DirectionArrow
+                    size={19}
+                    strokeWidth={1.75}
+                    aria-hidden="true"
+                    className="relative z-10 shrink-0 transition-transform duration-200 group-hover:-translate-y-0.5"
+                  />
+
+                  {/* BUTTON ACCENT */}
+                  <span
+                    aria-hidden="true"
+                    className={`absolute bottom-0 h-[3px] w-12 bg-white/35 transition-colors duration-200 group-hover:bg-accent ${
+                      isRTL ? "right-0" : "left-0"
+                    }`}
+                  />
+                </a>
+              </div>
             </div>
 
             {/* BOTTOM TECHNICAL RAIL */}
@@ -169,6 +260,7 @@ export default function MaintenanceContact({
                 TIVASA
               </span>
             </div>
+
           </div>
         </div>
       </div>

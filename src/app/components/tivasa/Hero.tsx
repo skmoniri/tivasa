@@ -1,3 +1,4 @@
+
 import type { Locale } from "@/i18n/config";
 
 interface HeroProps {
@@ -10,8 +11,8 @@ const content = {
     classification: "Engineering / Manufacturing",
     technology: "Technology",
     eyebrow: "Engineering",
-    headingFirst: "Built for",
-    headingSecond: "what's next.",
+    headingFirst: "VRF SOLUTIONS.",
+    headingSecond: "ENGINEERED EXCELLENCE.",
     description:
       "Tivasa develops technical solutions for demanding industrial environments — combining engineering precision, manufacturing expertise and practical performance.",
     scroll: "Scroll to explore",
@@ -28,8 +29,8 @@ const content = {
     classification: "مهندسی / تولید",
     technology: "فناوری",
     eyebrow: "مهندسی",
-    headingFirst: "ساخته‌شده برای",
-    headingSecond: "آینده‌ای پیش رو.",
+    headingFirst: "راهکارهای تخصصی",
+    headingSecond: "VRF",
     description:
       "تیواسا با تلفیق دقت مهندسی، تخصص تولید و عملکرد کاربردی، راهکارهای فنی را برای محیط‌های صنعتی و شرایط کاری پیچیده توسعه می‌دهد.",
     scroll: "برای مشاهده بیشتر پیمایش کنید",
@@ -53,16 +54,17 @@ export default function Hero({ locale }: HeroProps) {
       className="relative isolate overflow-hidden border-b border-background/10 bg-surface pt-24 text-background"
       style={{ backgroundColor: "#0b1f3a" }}
     >
-      {/* BACKGROUND PHOTOGRAPHY */}
+      {/* BACKGROUND PHOTOGRAPHY — DESKTOP ONLY */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 hidden bg-cover bg-center bg-no-repeat lg:block"
         style={{
-          backgroundImage: "url('/Twilight-Corner-Architecture.png')",
-          transform: isRTL ? "scaleX(-1)" : undefined,
+          backgroundImage:
+            "url('/Symmetrical-HVAC-Units-Beneath-Industrial-Canopy.png')",
         }}
       />
 
+      {/* MOBILE BACKGROUND — UNCHANGED */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 overflow-hidden lg:hidden"
@@ -70,7 +72,8 @@ export default function Hero({ locale }: HeroProps) {
         <div
           className="absolute inset-0 bg-no-repeat"
           style={{
-            backgroundImage: "url('/Moody-TEMA-Corporate-Hallway.png')",
+            backgroundImage:
+              "url('/Moody-TEMA-Corporate-Hallway.png')",
             backgroundSize: "auto 115%",
             backgroundPosition: "center bottom",
           }}
@@ -126,7 +129,9 @@ export default function Hero({ locale }: HeroProps) {
             {/* VERTICAL LABEL */}
             <span
               className={`font-sans text-xs font-medium text-background/55 ${
-                isRTL ? "absolute left-6 top-6" : "uppercase tracking-[0.16em]"
+                isRTL
+                  ? "absolute left-6 top-6"
+                  : "uppercase tracking-[0.16em]"
               }`}
               style={{
                 writingMode: "vertical-rl",
@@ -135,7 +140,7 @@ export default function Hero({ locale }: HeroProps) {
               {t.industrial}
             </span>
 
-            {/* YEAR — ALWAYS BOTTOM CENTER */}
+            {/* YEAR */}
             <span
               dir="ltr"
               className="mt-auto self-center font-sans text-xs font-medium text-background/55"
@@ -153,7 +158,9 @@ export default function Hero({ locale }: HeroProps) {
 
                 <span
                   className={`font-sans text-[10px] font-semibold text-background/85 md:text-xs ${
-                    isRTL ? "" : "uppercase tracking-[0.22em]"
+                    isRTL
+                      ? ""
+                      : "uppercase tracking-[0.22em]"
                   }`}
                 >
                   {t.classification}
@@ -162,7 +169,9 @@ export default function Hero({ locale }: HeroProps) {
 
               <div
                 className={`font-sans text-[10px] font-medium text-background/55 md:text-xs ${
-                  isRTL ? "pr-[18px]" : "pl-[18px] uppercase tracking-[0.2em]"
+                  isRTL
+                    ? "pr-[18px]"
+                    : "pl-[18px] uppercase tracking-[0.2em]"
                 }`}
               >
                 {t.technology}
@@ -184,7 +193,9 @@ export default function Hero({ locale }: HeroProps) {
 
                   <span
                     className={`font-sans text-[10px] font-medium text-accent ${
-                      isRTL ? "" : "uppercase tracking-[0.16em]"
+                      isRTL
+                        ? ""
+                        : "uppercase tracking-[0.16em]"
                     }`}
                   >
                     {t.eyebrow}
@@ -194,22 +205,31 @@ export default function Hero({ locale }: HeroProps) {
                 </div>
 
                 <h1
-                  className={`relative max-w-5xl font-display font-semibold text-background ${
+                  className={`relative w-full min-w-0 font-display font-semibold text-background ${
                     isRTL
-                      ? "text-[clamp(3rem,7vw,6.5rem)] leading-[1.35] tracking-normal"
-                      : "text-[clamp(3.5rem,13vw,6rem)] uppercase leading-[0.88] tracking-[-0.06em] sm:text-[clamp(4.5rem,10vw,7rem)] lg:text-[clamp(4.5rem,7vw,8rem)]"
+                      ? "text-[clamp(2rem,4vw,4.5rem)] leading-[1.15] tracking-normal"
+                      : "text-[clamp(1.8rem,4vw,4.5rem)] uppercase leading-[1.05] tracking-[-0.045em]"
                   }`}
                 >
                   {t.headingFirst}
-                  <br />
-                  <span className="font-normal">{t.headingSecond}</span>
+
+                  {t.headingSecond && (
+                    <>
+                      <br />
+                      <span className="font-normal">
+                        {t.headingSecond}
+                      </span>
+                    </>
+                  )}
                 </h1>
               </div>
 
               {/* ORIGINAL ANIMATED CONNECTOR */}
               <div
                 className={`mt-10 max-w-xl ${
-                  isRTL ? "md:mr-[8%]" : "md:ml-[8%]"
+                  isRTL
+                    ? "md:mr-[8%]"
+                    : "md:ml-[8%]"
                 }`}
               >
                 <div className="mb-5 flex items-center">
@@ -233,18 +253,24 @@ export default function Hero({ locale }: HeroProps) {
             {/* BOTTOM METADATA */}
             <div
               className={`flex items-end justify-between gap-4 border-t border-background/20 pt-5 font-sans text-[10px] font-medium text-background/65 md:text-xs ${
-                isRTL ? "" : "uppercase tracking-[0.16em]"
+                isRTL
+                  ? ""
+                  : "uppercase tracking-[0.16em]"
               }`}
             >
               <div className="flex items-center gap-3">
-                <span className="text-background/75">{t.scroll}</span>
+                <span className="text-background/75">
+                  {t.scroll}
+                </span>
 
                 <span className="relative h-8 w-px overflow-hidden bg-background/30">
                   <span className="tivasa-scroll-indicator absolute left-0 top-0 h-1/2 w-full bg-accent" />
                 </span>
               </div>
 
-              <span className="shrink-0">{t.location}</span>
+              <span className="shrink-0">
+                {t.location}
+              </span>
             </div>
           </div>
 
@@ -256,7 +282,9 @@ export default function Hero({ locale }: HeroProps) {
           >
             <div
               className={`pointer-events-none absolute top-0 hidden h-16 w-16 border-t-2 border-accent lg:block ${
-                isRTL ? "right-0 border-r-2" : "left-0 border-l-2"
+                isRTL
+                  ? "right-0 border-r-2"
+                  : "left-0 border-l-2"
               }`}
             />
 
@@ -273,7 +301,9 @@ export default function Hero({ locale }: HeroProps) {
                   <div>
                     <div
                       className={`mb-2 font-sans text-[10px] font-medium text-background/50 ${
-                        isRTL ? "" : "uppercase tracking-[0.16em]"
+                        isRTL
+                          ? ""
+                          : "uppercase tracking-[0.16em]"
                       }`}
                     >
                       {t.company}
@@ -292,7 +322,9 @@ export default function Hero({ locale }: HeroProps) {
 
                     <span
                       className={`font-sans text-[10px] font-medium text-background/60 ${
-                        isRTL ? "" : "uppercase tracking-[0.14em]"
+                        isRTL
+                          ? ""
+                          : "uppercase tracking-[0.14em]"
                       }`}
                     >
                       {t.active}
@@ -319,7 +351,9 @@ export default function Hero({ locale }: HeroProps) {
                       {t.statementFirst}
                     </span>
                     <br />
-                    <span>{t.statementSecond}</span>
+                    <span>
+                      {t.statementSecond}
+                    </span>
                   </p>
                 </div>
               </div>
@@ -329,7 +363,9 @@ export default function Hero({ locale }: HeroProps) {
                 <div className="mb-5 flex items-center justify-between">
                   <span
                     className={`font-sans text-[10px] font-medium text-background/55 ${
-                      isRTL ? "" : "uppercase tracking-[0.16em]"
+                      isRTL
+                        ? ""
+                        : "uppercase tracking-[0.16em]"
                     }`}
                   >
                     {t.disciplines}
@@ -355,7 +391,9 @@ export default function Hero({ locale }: HeroProps) {
                     >
                       <span
                         className={`font-display text-lg font-semibold text-background transition-colors duration-500 xl:text-xl ${
-                          isRTL ? "tracking-normal" : "tracking-[-0.02em]"
+                          isRTL
+                            ? "tracking-normal"
+                            : "tracking-[-0.02em]"
                         } ${
                           index === 0
                             ? ""
