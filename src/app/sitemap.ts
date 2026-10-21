@@ -1,32 +1,42 @@
+
 import type { MetadataRoute } from "next";
 
 import { SITE_URL } from "@/lib/seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const pages = ["", "/installation"];
+  const pages = [
+    { path: "", priority: 1 },
+    { path: "/installation", priority: 0.9 },
+    { path: "/maintenance", priority: 0.9 },
+    { path: "/dataCenter", priority: 0.9 },
+  ];
 
-  return pages.flatMap((path) => [
-    {
-      url: `${SITE_URL}/en${path}`,
-      changeFrequency: "monthly" as const,
-      priority: path === "" ? 1 : 0.8,
-      alternates: {
-        languages: {
-          en: `${SITE_URL}/en${path}`,
-          fa: `${SITE_URL}/fa${path}`,
-        },
+  return pages.flatMap(({ path, priority }) => {
+    const englishUrl = `${SITE_URL}/en${path}`;
+    const persianUrl = `${SITE_URL}/fa${path}`;
+
+    const alternates = {
+      languages: {
+        en: englishUrl,
+        fa: persianUrl,
       },
-    },
-    {
-      url: `${SITE_URL}/fa${path}`,
-      changeFrequency: "monthly" as const,
-      priority: path === "" ? 1 : 0.8,
-      alternates: {
-        languages: {
-          en: `${SITE_URL}/en${path}`,
-          fa: `${SITE_URL}/fa${path}`,
-        },
+    };
+
+    return [
+      {
+        url: englishUrl,
+        lastModified: undefined,
+        changeFrequency: "monthly" as const,
+        priority,
+        alternates,
       },
-    },
-  ]);
+      {
+        url: persianUrl,
+        lastModified: undefined,
+        changeFrequency: "monthly" as const,
+        priority,
+        alternates,
+      },
+    ];
+  });
 }

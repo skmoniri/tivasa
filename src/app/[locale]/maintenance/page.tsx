@@ -1,7 +1,12 @@
+
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import StructuredData from "@/app/components/StructuredData";
+import { getMaintenanceSchema } from "@/lib/structuredData";
+
 import { isLocale, getDirection } from "@/i18n/config";
+import { getPageMetadata } from "@/lib/seo";
 
 import MaintenanceHero from "@/app/components/tivasa/maintenance/MaintenanceHero";
 import MaintenanceStrategies from "@/app/components/tivasa/maintenance/MaintenanceStrategies";
@@ -24,16 +29,7 @@ export async function generateMetadata({
     notFound();
   }
 
-  const isRTL = locale === "fa";
-
-  return {
-    title: isRTL
-      ? "نگهداری و سرویس سیستم‌های VRF | تیواسا"
-      : "VRF Maintenance & Service | Tivasa",
-    description: isRTL
-      ? "خدمات نگهداری پیشگیرانه، پیش‌بینانه و اصلاحی سیستم‌های VRF با تمرکز بر پایداری سرمایش و عملکرد تأسیسات حساس."
-      : "Engineering-led VRF maintenance, preventive inspections, predictive monitoring and corrective service for critical facilities.",
-  };
+  return getPageMetadata(locale, "maintenance");
 }
 
 export default async function MaintenancePage({
@@ -46,18 +42,22 @@ export default async function MaintenancePage({
   }
 
   return (
-    <main
-      id="main-content"
-      dir={getDirection(locale)}
-      className="min-h-screen overflow-hidden bg-background text-foreground"
-    >
-      <MaintenanceHero locale={locale} />
-      <MaintenanceStrategies locale={locale} />
-      <MaintenanceSchedule locale={locale} />
-      <CriticalFacilities locale={locale} />
-      <MaintenanceMonitoring locale={locale} />
-      <EngineeringService locale={locale} />
-      <MaintenanceContact locale={locale} />
-    </main>
+    <>
+      <StructuredData data={getMaintenanceSchema(locale)} />
+
+      <main
+        id="main-content"
+        dir={getDirection(locale)}
+        className="min-h-screen overflow-hidden bg-background text-foreground"
+      >
+        <MaintenanceHero locale={locale} />
+        <MaintenanceStrategies locale={locale} />
+        <MaintenanceSchedule locale={locale} />
+        <CriticalFacilities locale={locale} />
+        <MaintenanceMonitoring locale={locale} />
+        <EngineeringService locale={locale} />
+        <MaintenanceContact locale={locale} />
+      </main>
+    </>
   );
 }
