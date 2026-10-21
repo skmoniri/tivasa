@@ -127,7 +127,7 @@ export default async function OpenGraphImage({
           letterSpacing: 2,
         }}
       >
-        <span>TIVASA.COM</span>
+        <span>TIVASACO.COM</span>
         <span>01 / VRF SYSTEMS</span>
       </div>
     </div>,

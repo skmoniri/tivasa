@@ -20,7 +20,7 @@ const heroLabels = {
   fa: {
     rail: "نگهداری سیستم‌های VRF",
     classification: "تیواسا / خدمات مهندسی",
-    category: "VRF / نگهداری و سرویس",
+    category: "VRF / تغمیر و نگهداری",
     eyebrow: "مهندسی نگهداری",
     metadata: "مهندسی / پایداری عملکرد",
   },

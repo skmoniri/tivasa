@@ -245,7 +245,7 @@ export const tivasaData = {
     products: [
       {
         number: "01",
-        title: "وی‌آر‌اف تیوا",
+        title: "وی‌آر‌اف تیکا",
         manufacturer: "TICA",
         series: "TIMS-X",
         category: "سیستم یونیت خارجی VRF",

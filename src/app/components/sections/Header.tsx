@@ -32,8 +32,8 @@ export default function Header({ locale }: HeaderProps) {
     [t.nav.projects, "/#projects"],
     [t.nav.about, "/#about"],
     [t.nav.installation, "/installation"],
-    [locale === "fa" ? "نگهداری و سرویس" : "Maintenance", "/maintenance"],
-    [isRTL ? "بانک اطلاعات فنی" : "DataCenter", "/dataCenter"],
+    [locale === "fa" ? "تعمیر و نگهداری" : "Maintenance", "/maintenance"],
+    [isRTL ? "دیتا سنتر" : "DataCenter", "/dataCenter"],
     [t.nav.contact, "/#contact"],
   ] as const;
 

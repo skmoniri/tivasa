@@ -22,8 +22,7 @@ const content = {
     statementFirst: "Engineering ideas into",
     statementSecond: "practical systems.",
     disciplines: "Disciplines",
-    items: ["Engineering", "Manufacturing", "Technology"],
-  },
+    items: ["Design", "Supply & Manufacturing", "After-Sales Service"],  },
   fa: {
     industrial: "سیستم‌های صنعتی",
     classification: "مهندسی / تولید",
@@ -40,8 +39,7 @@ const content = {
     statementFirst: "تبدیل ایده‌های مهندسی به",
     statementSecond: "سیستم‌های کاربردی.",
     disciplines: "حوزه‌های فعالیت",
-    items: ["مهندسی", "تولید", "فناوری"],
-  },
+    items: ["طراحی", "تأمین و تولید", "خدمات پس از فروش"],  },
 } as const;
 
 export default function Hero({ locale }: HeroProps) {

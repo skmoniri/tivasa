@@ -1,9 +1,10 @@
+
 export const homepageTranslations = {
   en: {
     projects: {
       label: "Selected projects",
       description:
-        "VRF system projects across healthcare, commercial, infrastructure, office and residential buildings.",
+        "A selection of VRF projects in healthcare, commercial, infrastructure, office and residential buildings — designed, supplied and installed by Tivasa.",
       documentation: "Project reference",
       previous: "Previous",
       next: "Next project",
@@ -45,7 +46,7 @@ export const homepageTranslations = {
     projects: {
       label: "پروژه‌های منتخب",
       description:
-        "منتخبی از پروژه‌های سیستم VRF در ساختمان‌های درمانی، تجاری، زیرساختی، اداری و مسکونی.",
+        "منتخبی از پروژه‌های سیستم VRF در ساختمان‌های درمانی، تجاری، زیرساختی، اداری و مسکونی؛ طراحی، تأمین و اجرا توسط تیواسا.",
       documentation: "معرفی پروژه",
       previous: "قبلی",
       next: "پروژه بعدی",
@@ -84,3 +85,4 @@ export const homepageTranslations = {
     },
   },
 } as const;
+
