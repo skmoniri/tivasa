@@ -5,14 +5,21 @@ import type { Locale } from "@/i18n/config";
 
 /**
  * Primary production domain.
- *
- * All canonical URLs, hreflang references,
- * Open Graph URLs and sitemap entries
- * should resolve to this domain.
  */
 export const SITE_URL = "https://tivasaco.com";
 
 export const SITE_NAME = "Tivasa";
+
+/**
+ * Approved homepage Open Graph artwork.
+ *
+ * Actual file:
+ * public/og/Engineered for Performance.png
+ *
+ * Spaces in public URLs must be URL-encoded.
+ */
+export const HOME_OG_IMAGE =
+  `${SITE_URL}/og/Engineered%20for%20Performance.png`;
 
 type SeoPage =
   | "home"
@@ -100,15 +107,8 @@ export function getCanonicalUrl(
 }
 
 /**
- * Generate complete, localized metadata.
- *
- * Includes:
- * - SEO title and description
- * - Canonical URL
- * - English/Persian hreflang alternates
- * - Open Graph metadata
- * - Twitter/X metadata
- * - Search-engine indexing directives
+ * Generate localized SEO, Open Graph, Twitter,
+ * canonical, hreflang and robots metadata.
  */
 export function getPageMetadata(
   locale: Locale,
@@ -122,7 +122,23 @@ export function getPageMetadata(
   const englishUrl = `${SITE_URL}/en${path}`;
   const persianUrl = `${SITE_URL}/fa${path}`;
 
+  const isHomepage = page === "home";
+
+  const homepageOpenGraphImages = isHomepage
+    ? [
+        {
+          url: HOME_OG_IMAGE,
+          width: 1200,
+          height: 630,
+          type: "image/png" as const,
+          alt: "Tivasa — Engineered for Performance. VRF Engineering and HVAC Solutions",
+        },
+      ]
+    : undefined;
+
   return {
+    metadataBase: new URL(SITE_URL),
+
     title: content.title,
 
     description: content.description,
@@ -154,6 +170,10 @@ export function getPageMetadata(
         locale === "fa"
           ? ["en_US"]
           : ["fa_IR"],
+
+      ...(homepageOpenGraphImages
+        ? { images: homepageOpenGraphImages }
+        : {}),
     },
 
     twitter: {
@@ -162,6 +182,10 @@ export function getPageMetadata(
       title: content.title,
 
       description: content.description,
+
+      ...(isHomepage
+        ? { images: [HOME_OG_IMAGE] }
+        : {}),
     },
 
     robots: {
