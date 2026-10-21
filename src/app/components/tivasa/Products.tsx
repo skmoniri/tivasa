@@ -33,7 +33,7 @@ const MIN_VELOCITY = 0.12;
 const MAX_VELOCITY = 2.4;
 const MOMENTUM_MULTIPLIER = 1.0;
 
-const PRODUCT_TABS = ["TIVA", "TCL", "MIDEA"] as const;
+const PRODUCT_TABS = ["TICA", "TCL", "MIDEA"] as const;
 
 // Exact filenames as provided from /public/catalogs.
 // TCL's filename contains non-breaking spaces (U+00A0).

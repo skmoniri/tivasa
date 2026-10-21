@@ -85,4 +85,3 @@ export const homepageTranslations = {
     },
   },
 } as const;
-
