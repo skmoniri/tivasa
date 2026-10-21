@@ -10,9 +10,9 @@ import {
 } from "lucide-react";
 
 import type { Locale } from "@/i18n/config";
-import { getDatabaseContent } from "@/i18n/database";
+import { getDataCenterContent } from "@/i18n/dataCenter";
 
-interface DatabaseBenefitsProps {
+interface DataCenterBenefitsProps {
   locale: Locale;
 }
 
@@ -45,12 +45,12 @@ const interfaceText = {
 
 const SWIPE_THRESHOLD = 45;
 
-export default function DatabaseBenefits({
+export default function DataCenterBenefits({
   locale,
-}: DatabaseBenefitsProps) {
+}: DataCenterBenefitsProps) {
   const isRTL = locale === "fa";
 
-  const t = getDatabaseContent(locale).benefits;
+  const t = getDataCenterContent(locale).benefits;
   const ui = interfaceText[locale];
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -135,9 +135,9 @@ export default function DatabaseBenefits({
 
   return (
     <section
-      id="database-benefits"
+      id="data-center-benefits"
       dir={isRTL ? "rtl" : "ltr"}
-      aria-labelledby="database-benefits-title"
+      aria-labelledby="data-center-benefits-title"
       className="scroll-mt-24 overflow-hidden border-b border-background/10 bg-surface text-background"
     >
       <div className="mx-auto max-w-[1800px]">
@@ -214,7 +214,7 @@ export default function DatabaseBenefits({
               </div>
 
               <h2
-                id="database-benefits-title"
+                id="data-center-benefits-title"
                 className={`mt-3 max-w-5xl font-display font-semibold ${
                   isRTL
                     ? "text-[clamp(1.85rem,3.1vw,3.2rem)] leading-[1.2] tracking-normal"
@@ -249,7 +249,7 @@ export default function DatabaseBenefits({
                       onClick={() => setActiveIndex(index)}
                       aria-label={`${ui.advantages} ${item.number}: ${item.title}`}
                       aria-pressed={isActive}
-                      aria-controls="database-benefits-panel"
+                      aria-controls="data-center-benefits-panel"
                       className="group relative flex min-w-0 flex-col items-center gap-2 py-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                     >
                       {/* NUMBER */}
@@ -315,7 +315,7 @@ export default function DatabaseBenefits({
 
             {/* ACTIVE BENEFIT PANEL — BLACK CARD */}
             <div
-              id="database-benefits-panel"
+              id="data-center-benefits-panel"
               role="region"
               aria-label={ui.selected}
               aria-live="polite"

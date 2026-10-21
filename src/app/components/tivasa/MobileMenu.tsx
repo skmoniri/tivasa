@@ -34,7 +34,7 @@ export default function MobileMenu({
     [t.nav.about, "/#about"],
     [t.nav.installation, "/installation"],
     [isRTL ? "نگهداری و سرویس" : "Maintenance", "/maintenance"],
-    [isRTL ? "بانک اطلاعات فنی" : "Database", "/database"],
+    [isRTL ? "بانک اطلاعات فنی" : "DataCenter", "/dataCenter"],
     [t.nav.contact, "/#contact"],
   ] as const;
 

@@ -109,7 +109,7 @@ export const tivasaData = {
     products: [
       {
         number: "01",
-        title: "VRF TIVA",
+        title: "VRF TICA",
         manufacturer: "TICA",
         series: "TIMS-X",
         category: "VRF Outdoor System",

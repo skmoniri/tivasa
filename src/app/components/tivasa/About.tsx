@@ -18,7 +18,7 @@ interface AboutProps {
 }
 
 const RESUME_URL =
-  "/catalogs/Teta%20Company%20VRF%20System%20Resume.pdf";
+  "/catalogs/Teta_VRF_Project_Portfolio_English_LTR.pdf";
 
 const EXHIBITION_IMAGE = "/TETA-exhibition.png";
 
@@ -153,21 +153,14 @@ export default function About({ locale }: AboutProps) {
               </p>
             </div>
 
-            {/*
-              RESUME + EXHIBITION
-
-              Existing resume remains unchanged.
-
-              New exhibition photo is compact and
-              positioned beside the resume on desktop.
-            */}
+            {/* RESUME + EXHIBITION */}
             <div className="mt-7 grid gap-5 md:mt-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:items-center md:gap-6 lg:gap-8">
 
               {/* COMPANY RESUME DOWNLOAD */}
               <div className="flex min-w-0 items-center">
                 <a
                   href={RESUME_URL}
-                  download="Teta Company VRF System Resume.pdf"
+                  download="Teta_VRF_Project_Portfolio_English_LTR.pdf"
                   type="application/pdf"
                   aria-label={t.resumeAria}
                   className="group/resume inline-flex min-h-[44px] max-w-full items-center justify-between gap-6 border border-foreground/15 px-4 py-2.5 transition-colors duration-300 hover:border-accent hover:bg-accent/[0.035] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"

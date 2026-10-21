@@ -1,16 +1,16 @@
 
 import type { Locale } from "@/i18n/config";
-import { getDatabaseContent } from "@/i18n/database";
+import { getDataCenterContent } from "@/i18n/dataCenter";
 
-interface DatabaseExperienceProps {
+interface DataCenterExperienceProps {
   locale: Locale;
 }
 
-export default function DatabaseExperience({
+export default function DataCenterExperience({
   locale,
-}: DatabaseExperienceProps) {
+}: DataCenterExperienceProps) {
   const isRTL = locale === "fa";
-  const t = getDatabaseContent(locale).experience;
+  const t = getDataCenterContent(locale).experience;
 
   const experienceItems = [
     t.first,
@@ -20,9 +20,9 @@ export default function DatabaseExperience({
 
   return (
     <section
-      id="database-experience"
+      id="data-center-experience"
       dir={isRTL ? "rtl" : "ltr"}
-      aria-labelledby="database-experience-title"
+      aria-labelledby="data-center-experience-title"
       className="scroll-mt-24 border-b border-background/10 bg-surface text-background"
     >
       <div className="mx-auto max-w-[1800px]">
@@ -89,7 +89,7 @@ export default function DatabaseExperience({
 
             {/* HEADING */}
             <h2
-              id="database-experience-title"
+              id="data-center-experience-title"
               className={`max-w-5xl font-display font-semibold ${
                 isRTL
                   ? "text-[clamp(2rem,3.6vw,3.8rem)] leading-[1.3] tracking-normal"

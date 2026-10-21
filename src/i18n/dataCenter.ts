@@ -89,6 +89,6 @@ const content = {
   },
 } as const;
 
-export function getDatabaseContent(locale: Locale) {
+export function getDataCenterContent(locale: Locale) {
   return content[locale];
 }

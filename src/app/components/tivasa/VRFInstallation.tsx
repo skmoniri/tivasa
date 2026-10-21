@@ -34,12 +34,12 @@ const translations = {
       explore: "Explore VRF maintenance",
     },
 
-    database: {
-      meta: "VRF / Database",
+    dataCenter: {
+      meta: "VRF / DataCenter",
       category: "Technical Resources",
       headingFirst: "Technical",
-      headingSecond: "database.",
-      explore: "Explore technical database",
+      headingSecond: "dataCenter.",
+      explore: "Explore technical dataCenter",
     },
   },
 
@@ -64,7 +64,7 @@ const translations = {
       explore: "مشاهده خدمات نگهداری VRF",
     },
 
-    database: {
+    dataCenter: {
       meta: "VRF / بانک اطلاعات",
       category: "منابع و اطلاعات فنی",
       headingFirst: "بانک اطلاعات",
@@ -102,12 +102,12 @@ export default function VRFInstallation({
       content: t.maintenance,
     },
     {
-      id: "database",
-      href: "/database",
+      id: "dataCenter",
+      href: "/dataCenter",
       image: "/Database-Pic.png",
       alt: "Data center server racks and precision cooling equipment",
       position: "object-center",
-      content: t.database,
+      content: t.dataCenter,
     },
   ] as const;
 

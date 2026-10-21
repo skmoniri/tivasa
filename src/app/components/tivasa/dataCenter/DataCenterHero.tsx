@@ -2,23 +2,23 @@
 import { ArrowDown } from "lucide-react";
 
 import type { Locale } from "@/i18n/config";
-import { getDatabaseContent } from "@/i18n/database";
+import { getDataCenterContent } from "@/i18n/dataCenter";
 
-interface DatabaseHeroProps {
+interface DataCenterHeroProps {
   locale: Locale;
 }
 
-export default function DatabaseHero({
+export default function DataCenterHero({
   locale,
-}: DatabaseHeroProps) {
+}: DataCenterHeroProps) {
   const isRTL = locale === "fa";
-  const t = getDatabaseContent(locale).hero;
+  const t = getDataCenterContent(locale).hero;
 
   return (
     <section
-      id="database-hero"
+      id="data-center-hero"
       dir={isRTL ? "rtl" : "ltr"}
-      aria-labelledby="database-hero-title"
+      aria-labelledby="data-center-hero-title"
       className="relative isolate overflow-hidden border-b border-background/10 bg-surface pt-24 text-background"
       style={{ backgroundColor: "#091c34" }}
     >
@@ -194,7 +194,7 @@ export default function DatabaseHero({
 
                 {/* MAIN HEADING */}
                 <h1
-                  id="database-hero-title"
+                  id="data-center-hero-title"
                   className={`relative max-w-6xl font-display font-semibold text-background ${
                     isRTL
                       ? "text-[clamp(2rem,4.8vw,4.5rem)] leading-[1.2] tracking-normal"
@@ -241,7 +241,7 @@ export default function DatabaseHero({
             {/* BOTTOM METADATA */}
             <div className="flex flex-wrap items-end justify-between gap-5 border-t border-background/25 pt-4">
               <a
-                href="#database-overview"
+                href="#data-center-overview"
                 className={`group inline-flex items-center gap-4 font-sans text-[10px] font-medium text-background/85 transition-colors duration-300 hover:text-background md:text-xs ${
                   isRTL
                     ? ""

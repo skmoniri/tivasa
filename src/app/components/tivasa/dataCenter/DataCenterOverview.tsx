@@ -1,22 +1,22 @@
 
 import type { Locale } from "@/i18n/config";
-import { getDatabaseContent } from "@/i18n/database";
+import { getDataCenterContent } from "@/i18n/dataCenter";
 
-interface DatabaseOverviewProps {
+interface DataCenterOverviewProps {
   locale: Locale;
 }
 
-export default function DatabaseOverview({
+export default function DataCenterOverview({
   locale,
-}: DatabaseOverviewProps) {
+}: DataCenterOverviewProps) {
   const isRTL = locale === "fa";
-  const t = getDatabaseContent(locale).intro;
+  const t = getDataCenterContent(locale).intro;
 
   return (
     <section
-      id="database-overview"
+      id="data-center-overview"
       dir={isRTL ? "rtl" : "ltr"}
-      aria-labelledby="database-overview-title"
+      aria-labelledby="data-center-overview-title"
       className="scroll-mt-24 border-b border-foreground/10 bg-background text-foreground"
     >
       <div className="mx-auto max-w-[1800px]">
@@ -71,7 +71,7 @@ export default function DatabaseOverview({
 
             {/* HEADING */}
             <h2
-              id="database-overview-title"
+              id="data-center-overview-title"
               className={`max-w-5xl font-display font-semibold ${
                 isRTL
                   ? "text-[clamp(2rem,4vw,4rem)] leading-[1.3] tracking-normal"

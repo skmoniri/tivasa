@@ -19,13 +19,17 @@ interface ProjectsProps {
   locale: Locale;
 }
 
+
+
 const MANUFACTURER_COLORS: Record<string, string> = {
-  GREE: "#0769AD",
-  VICA: "#EAB308",
-  TICA: "#D71920",
-  MIDEA: "#3B82F6",
-  TCL: "#EF4444",
+  GREE: "#2A418E",
+  VICA: "#EAB308", // Unverified — awaiting actual VICA logo
+  TICA: "#10449A", // Approximate dark blue
+  MIDEA: "#0098D1",
+  TCL: "#FF0000",
 };
+
+
 
 function renderManufacturerText(text: string) {
   const pattern = /(GREE|VICA|TICA|MIDEA|TCL|گری|ویکا|تیکا|میدیا|تی‌سی‌ال)/gi;
