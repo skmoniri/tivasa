@@ -67,8 +67,8 @@ const translations = {
     dataCenter: {
       meta: "VRF / دیتا سنتر",
       category: "منابع و اطلاعات فنی",
-      headingFirst: "بانک اطلاعات",
-      headingSecond: "فنی VRF.",
+      headingFirst: "کاربرد VRF",
+      headingSecond: "در دیتاسنتر‌ها",
       explore: "مشاهده بانک اطلاعات فنی",
     },
   },
