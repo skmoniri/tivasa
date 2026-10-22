@@ -43,3 +43,5 @@ next-env.d.ts
 deploy/
 deploy-new/
 tivasa-update.zip
+
+tivasa-deploy.zip
