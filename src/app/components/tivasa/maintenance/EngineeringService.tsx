@@ -1,3 +1,4 @@
+
 import type { Locale } from "@/i18n/config";
 import { getMaintenanceContent } from "@/i18n/maintenance";
 
@@ -66,7 +67,7 @@ export default function EngineeringService({
               {t.title}
               <br />
 
-              <span className="font-normal text-foreground/35">{t.accent}</span>
+              <span className="font-normal text-foreground">{t.accent}</span>
             </h2>
           </div>
         </div>
@@ -112,7 +113,7 @@ export default function EngineeringService({
                   {item.title}
                 </h3>
 
-                <p className="mt-3 max-w-xl font-sans text-[13px] leading-6 text-foreground/55">
+                <p className="mt-3 max-w-xl font-sans text-[13px] leading-6 text-foreground">
                   {item.description}
                 </p>
               </div>

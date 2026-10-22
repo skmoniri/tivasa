@@ -100,7 +100,7 @@ export default function DataCenterContact({
 
                 <br />
 
-                <span className="font-normal text-foreground/40">
+                <span className="font-normal text-foreground">
                   {t.accent}
                 </span>
               </h2>
@@ -110,7 +110,7 @@ export default function DataCenterContact({
             <div className="flex flex-wrap items-center justify-between gap-6 border-t border-foreground/15 px-6 py-6 md:px-10 lg:px-12">
 
               {/* DESCRIPTION */}
-              <p className="max-w-lg font-sans text-sm leading-7 text-foreground/60">
+              <p className="max-w-lg font-sans text-sm leading-7 text-foreground">
                 {t.description}
               </p>
 

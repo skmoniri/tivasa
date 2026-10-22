@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -83,7 +84,7 @@ export default function MaintenanceSchedule({
               >
                 {t.title}
                 <br />
-                <span className="font-normal text-background/45">
+                <span className="font-normal text-background">
                   {t.accent}
                 </span>
               </h2>
@@ -278,7 +279,7 @@ export default function MaintenanceSchedule({
                             {String(index + 1).padStart(2, "0")}
                           </span>
 
-                          <p className="min-w-0 font-sans text-sm leading-6 text-background/65 transition-colors duration-200 group-hover:text-background/90">
+                          <p className="min-w-0 font-sans text-sm leading-6 text-background transition-colors duration-200 group-hover:text-background">
                             {task}
                           </p>
                         </div>

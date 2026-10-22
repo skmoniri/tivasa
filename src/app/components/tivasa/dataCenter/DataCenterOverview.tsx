@@ -82,13 +82,13 @@ export default function DataCenterOverview({
 
               <br />
 
-              <span className="font-normal text-foreground/40">
+              <span className="font-normal text-foreground">
                 {t.accent}
               </span>
             </h2>
 
             {/* DESCRIPTION */}
-            <p className="mt-7 max-w-3xl border-t border-foreground/10 pt-6 font-sans text-sm leading-7 text-foreground/60 md:text-base md:leading-8">
+            <p className="mt-7 max-w-3xl border-t border-foreground/10 pt-6 font-sans text-sm leading-7 text-foreground md:text-base md:leading-8">
               {t.description}
             </p>
 

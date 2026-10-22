@@ -88,12 +88,12 @@ export default function DataCenterFramework({
 
                 <br />
 
-                <span className="font-normal text-foreground/45">
+                <span className="font-normal text-foreground">
                   {t.accent}
                 </span>
               </h2>
 
-              <p className="mt-5 max-w-xl font-sans text-sm leading-7 text-foreground/60">
+              <p className="mt-5 max-w-xl font-sans text-sm leading-7 text-foreground">
                 {t.description}
               </p>
             </div>
@@ -125,7 +125,7 @@ export default function DataCenterFramework({
                   </h3>
 
                   {/* STEP DESCRIPTION */}
-                  <p className="max-w-xl font-sans text-[13px] leading-6 text-foreground/55 transition-colors duration-300 group-hover:text-foreground/75">
+                  <p className="max-w-xl font-sans text-[13px] leading-6 text-foreground transition-colors duration-300 group-hover:text-foreground">
                     {step.description}
                   </p>
 

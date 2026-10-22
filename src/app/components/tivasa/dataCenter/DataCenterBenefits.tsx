@@ -225,7 +225,7 @@ export default function DataCenterBenefits({
 
                 <br />
 
-                <span className="font-normal text-background/45">
+                <span className="font-normal text-background">
                   {t.accent}
                 </span>
               </h2>
@@ -421,7 +421,7 @@ export default function DataCenterBenefits({
                   {/* DESCRIPTION */}
                   <p
                     key={`benefit-description-${activeIndex}`}
-                    className="tivasa-process-description mt-3 max-w-2xl font-sans text-[13px] leading-6 text-background/75 md:text-sm md:leading-6"
+                    className="tivasa-process-description mt-3 max-w-2xl font-sans text-[13px] leading-6 text-background md:text-sm md:leading-6"
                   >
                     {currentItem.description}
                   </p>

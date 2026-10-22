@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 
 import type { Locale } from "@/i18n/config";
-import { getTivasaData } from "@/i18n/tivasaData";
 
 interface AboutProps {
   locale: Locale;
@@ -31,13 +30,39 @@ const translations = {
     paragraphOne:
       "Tivasa specializes in VRF air-conditioning systems, bringing together technical design, equipment selection and professional installation to deliver reliable climate solutions.",
     paragraphTwo:
-      "Our approach covers every stage of a project, from assessing requirements and commissioning equipment to ongoing maintenance and technical support.",
+      "Tivasa's approach throughout every stage of a project is built on precise planning, systematic execution, and creating a satisfying experience for all stakeholders — an approach that ensures quality, commitment, and satisfaction throughout the entire project journey.",
     resume: "Download Company Resume",
     resumeAria: "Download company resume PDF",
     exhibitionLabel: "Company Exhibition",
     exhibitionCaption: "TETA Company / Exhibition",
     exhibitionAlt:
       "TETA Company HVAC exhibition booth featuring company branding and an illuminated display",
+    capabilities: [
+      {
+        number: "01",
+        title: "Technical & Engineering",
+        description:
+          "Comprehensive technical assessments, precise engineering design, and professional planning tailored to each project's requirements.",
+      },
+      {
+        number: "02",
+        title: "Supply & Delivery",
+        description:
+          "Reliable equipment sourcing, coordinated procurement, and timely delivery in accordance with project specifications.",
+      },
+      {
+        number: "03",
+        title: "Installation & Commissioning",
+        description:
+          "Systematic installation, thorough testing, and professional commissioning to ensure optimal system performance.",
+      },
+      {
+        number: "04",
+        title: "Sustainable Maintenance",
+        description:
+          "Planned maintenance, technical support, and continuous performance monitoring to preserve long-term system reliability.",
+      },
+    ],
   },
 
   fa: {
@@ -48,13 +73,39 @@ const translations = {
     paragraphOne:
       "تیواسا در زمینه سیستم‌های تهویه مطبوع VRF فعالیت می‌کند و با تمرکز بر طراحی فنی، انتخاب تجهیزات و اجرای اصولی، راهکارهایی متناسب با نیاز هر پروژه ارائه می‌دهد.",
     paragraphTwo:
-      "رویکرد ما تمامی مراحل پروژه، از بررسی نیازها و راه‌اندازی تجهیزات تا نگهداری و پشتیبانی فنی را در بر می‌گیرد.",
+      "رویکرد تیواسا در تمامی مراحل پروژه، بر پایه‌ی برنامه‌ریزی دقیق، اجرای نظام‌مند و خلق تجربه‌ای رضایت‌بخش برای تمامی ذی‌نفعان استوار است؛ رویکردی که کیفیت، تعهد و رضایت را در تمام مسیر پروژه تضمین می‌کند",
     resume: "دانلود رزومه شرکت",
     resumeAria: "دانلود فایل PDF رزومه شرکت",
     exhibitionLabel: "حضور نمایشگاهی",
     exhibitionCaption: "شرکت تتا / نمایشگاه",
     exhibitionAlt:
       "غرفه نمایشگاهی شرکت تتا با نشان تجاری و نمایشگر نورپردازی‌شده",
+    capabilities: [
+      {
+        number: "01",
+        title: "فنی و مهندسی",
+        description:
+          "بررسی تخصصی نیازهای پروژه، طراحی مهندسی دقیق و برنامه‌ریزی فنی متناسب با شرایط و الزامات هر پروژه.",
+      },
+      {
+        number: "02",
+        title: "تأمین و ارسال",
+        description:
+          "تأمین تجهیزات مطابق با مشخصات فنی پروژه، مدیریت فرآیند سفارش و هماهنگی ارسال به‌موقع تجهیزات.",
+      },
+      {
+        number: "03",
+        title: "اجرا و راه‌اندازی",
+        description:
+          "اجرای نظام‌مند، نصب اصولی تجهیزات، آزمایش و راه‌اندازی تخصصی سیستم‌ها با هدف دستیابی به عملکرد مطلوب.",
+      },
+      {
+        number: "04",
+        title: "نگهداری پایدار",
+        description:
+          "ارائه خدمات نگهداری برنامه‌ریزی‌شده، پشتیبانی فنی و پایش مستمر عملکرد سیستم‌ها برای حفظ کیفیت و پایداری بلندمدت.",
+      },
+    ],
   },
 } as const;
 
@@ -62,7 +113,7 @@ export default function About({ locale }: AboutProps) {
   const isRTL = locale === "fa";
   const t = translations[locale];
 
-  const capabilities = getTivasaData(locale).capabilities;
+  const capabilities = t.capabilities;
 
   const DirectionArrow = isRTL ? ArrowUpLeft : ArrowUpRight;
 
@@ -263,28 +314,36 @@ export default function About({ locale }: AboutProps) {
                   </span>
                 </figcaption>
               </figure>
-
             </div>
           </div>
         </div>
 
-        {/* CAPABILITIES */}
-        <div className="grid border-t border-foreground/10 md:grid-cols-3">
+        {/* FOUR CAPABILITIES — ONE ROW ON DESKTOP */}
+        <div className="grid border-t border-foreground/10 md:grid-cols-2 lg:grid-cols-4">
           {capabilities.map((capability, index) => (
             <div
               key={capability.number}
-              className={`tivasa-capability-group tivasa-about-reveal group relative overflow-hidden p-5 transition-colors duration-500 hover:bg-foreground/[0.018] md:p-7 lg:p-8 ${
+              className={`tivasa-capability-group tivasa-about-reveal group relative min-w-0 overflow-hidden p-5 transition-colors duration-500 hover:bg-foreground/[0.018] md:p-7 lg:p-8 ${
                 index !== capabilities.length - 1
-                  ? `border-b border-foreground/10 md:border-b-0 ${
-                      isRTL ? "md:border-l" : "md:border-r"
+                  ? `border-b border-foreground/10 lg:border-b-0 ${
+                      isRTL ? "lg:border-l" : "lg:border-r"
                     }`
+                  : ""
+              } ${
+                index === 0 || index === 2
+                  ? isRTL
+                    ? "md:border-l md:border-foreground/10 lg:border-l"
+                    : "md:border-r md:border-foreground/10 lg:border-r"
+                  : ""
+              } ${
+                index >= 2
+                  ? "md:border-b-0"
                   : ""
               }`}
               style={{
                 animationDelay: `${180 + index * 100}ms`,
               }}
             >
-
               {/* CAPABILITY NUMBER */}
               <div className="mb-9 flex items-center gap-4 md:mb-11">
                 <div className="h-7 w-px bg-accent" />
@@ -332,12 +391,11 @@ export default function About({ locale }: AboutProps) {
                   }`}
                 />
               </div>
-
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );
 }
+

@@ -100,13 +100,13 @@ export default function DataCenterExperience({
 
               <br />
 
-              <span className="font-normal text-background/45">
+              <span className="font-normal text-background">
                 {t.accent}
               </span>
             </h2>
 
             {/* DESCRIPTION */}
-            <p className="mt-7 max-w-3xl font-sans text-sm leading-7 text-background/65">
+            <p className="mt-7 max-w-3xl font-sans text-sm leading-7 text-background">
               {t.description}
             </p>
 

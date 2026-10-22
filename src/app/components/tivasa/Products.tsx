@@ -60,6 +60,12 @@ export default function Products({ locale }: ProductsProps) {
     ? { first: "فراتر از سرمایش.", second: "فراتر از انتظار." }
     : { first: "Beyond cooling.", second: "Beyond expectations." };
 
+  // Normalize Persian spellings of VRF only in the product section.
+  const displayVRF = (value: string) =>
+    isRTL
+      ? value.replace(/وی[\s\u200c\u200f\u200e\u2060-\u2069]*[اآ][ر\s\u200c\u200f\u200e\u2060-\u2069]*ا?ف/g, "VRF")
+      : value;
+
   const productTabName = (index: number) =>
     PRODUCT_TABS[index] ?? products[index]?.title ?? String(index + 1);
 
@@ -551,7 +557,7 @@ export default function Products({ locale }: ProductsProps) {
               </h2>
 
               <p className="max-w-lg font-sans text-[13px] leading-6 text-foreground/55">
-                {t.description}
+                {displayVRF(t.description)}
               </p>
             </div>
           </div>
@@ -710,7 +716,7 @@ export default function Products({ locale }: ProductsProps) {
                 <div className="relative w-full overflow-hidden border border-foreground/10 bg-[#e5e7e7]">
                   <Image
                     src={product.image}
-                    alt={`${product.title} - ${product.series}`}
+                    alt={`${displayVRF(product.title)} - ${displayVRF(product.series)}`}
                     width={1600}
                     height={900}
                     sizes="(max-width: 640px) 86vw, (max-width: 1024px) 66vw, (max-width: 1280px) 46vw, 42vw"
@@ -784,7 +790,7 @@ export default function Products({ locale }: ProductsProps) {
                           : "text-[clamp(2rem,3.2vw,3.5rem)] leading-[0.9] tracking-[-0.05em]"
                       }`}
                     >
-                      {product.title}
+                      {displayVRF(product.title)}
                     </h3>
 
                     <div
@@ -797,14 +803,14 @@ export default function Products({ locale }: ProductsProps) {
 
                       <span className="h-3 w-px bg-foreground/20" />
 
-                      <span>{product.series}</span>
+                      <span>{displayVRF(product.series)}</span>
                     </div>
                   </div>
 
                   {/* DESCRIPTION / MANUFACTURER */}
                   <div className="min-w-0 md:col-span-7">
                     <p className="font-sans text-[13px] leading-[1.55] text-foreground/70">
-                      {profile.description}
+                      {displayVRF(profile.description)}
                     </p>
 
                     <div className="mt-2.5 border-t border-foreground/10 pt-2.5">

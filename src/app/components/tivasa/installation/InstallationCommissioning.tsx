@@ -2,7 +2,6 @@
 import Image from "next/image";
 
 import type { Locale } from "@/i18n/config";
-import { getInstallationData } from "./installationData";
 
 interface Props {
   locale: Locale;
@@ -22,6 +21,33 @@ const translations = {
     imageDetail: "VRF / Ceiling Cassette",
     imageAlt:
       "Installed ceiling cassette air-conditioning unit with four-way air outlets and ventilation grille",
+
+    qualityChecks: [
+      {
+        number: "01",
+        title: "Refrigerant Circuit Pressure and Leak Testing",
+        description:
+          "Pressure testing of the VRF system's copper piping network using dry nitrogen, in accordance with the test pressure and requirements specified by the manufacturer. Brazed joints, Refnet branch connections, and all connection points are inspected to ensure the refrigerant circuit is properly sealed before evacuation and commissioning.",
+      },
+      {
+        number: "02",
+        title: "Deep Vacuum and Circuit Dehydration",
+        description:
+          "Removal of moisture, air, and non-condensable gases from the piping network and permitted components of the refrigerant circuit using a specialized vacuum pump and precision measuring instruments. Achieving the required vacuum level and verifying its stability in accordance with the manufacturer's instructions are key steps in preparing the VRF system for reliable operation.",
+      },
+      {
+        number: "03",
+        title: "Additional Refrigerant Charge Calculation and Charging",
+        description:
+          "Determination of the additional refrigerant charge based on the actual lengths and diameters of the liquid lines, the number and types of branch connections, and manufacturer-specific calculations. Refrigerant charging is performed using precision measuring equipment while observing the specified refrigerant type and recommended charging procedure to establish the correct operating conditions for the refrigeration cycle and inverter compressors.",
+      },
+      {
+        number: "04",
+        title: "Specialized VRF Commissioning and Performance Verification",
+        description:
+          "Verification of indoor and outdoor unit addressing and communication, inspection of communication wiring, review of error codes, and execution of initial commissioning procedures according to the manufacturer's protocol. Operating parameters, including temperatures, measurable pressures, compressor frequency, electronic expansion valve operation, and system response in cooling and heating modes, are then evaluated to confirm the system's readiness for operation.",
+      },
+    ],
   },
 
   fa: {
@@ -37,6 +63,33 @@ const translations = {
     imageDetail: "VRF / یونیت کاستی سقفی",
     imageAlt:
       "یونیت کاستی سقفی نصب‌شده با دریچه‌های چهارطرفه توزیع هوا و شبکه تهویه",
+
+    qualityChecks: [
+      {
+        number: "01",
+        title: "آزمون فشار و نشتی مدار مبرد",
+        description:
+          "انجام تست فشار شبکه لوله‌کشی مسی سیستم VRF با استفاده از نیتروژن خشک، مطابق فشار آزمون و الزامات تعیین‌شده توسط سازنده. بررسی اتصالات لحیمی، انشعابات Refnet و تمامی نقاط اتصال، با هدف اطمینان از آب‌بندی مدار مبرد پیش از وکیوم و راه‌اندازی.",
+      },
+      {
+        number: "02",
+        title: "وکیوم عمیق و رطوبت‌زدایی مدار",
+        description:
+          "تخلیه رطوبت، هوا و گازهای غیرقابل‌تراکم از شبکه لوله‌کشی و اجزای مجاز مدار مبرد، با استفاده از پمپ وکیوم تخصصی و تجهیزات اندازه‌گیری دقیق. دستیابی به سطح خلأ موردنیاز و بررسی پایداری آن، مطابق دستورالعمل سازنده، از مراحل کلیدی آماده‌سازی سیستم VRF برای بهره‌برداری مطمئن است.",
+      },
+      {
+        number: "03",
+        title: "محاسبه و شارژ تکمیلی مبرد",
+        description:
+          "تعیین مقدار شارژ تکمیلی مبرد بر اساس طول و قطر واقعی خطوط مایع، تعداد و نوع انشعابات و محاسبات اختصاصی سازنده. شارژ مبرد با استفاده از تجهیزات اندازه‌گیری دقیق و رعایت نوع مبرد و روش شارژ توصیه‌شده، به‌منظور فراهم‌سازی شرایط صحیح عملکرد سیکل تبرید و کمپرسورهای اینورتر انجام می‌شود.",
+      },
+      {
+        number: "04",
+        title: "راه‌اندازی تخصصی و تأیید عملکرد VRF",
+        description:
+          "بررسی صحت آدرس‌دهی و ارتباطات یونیت‌های داخلی و خارجی، کنترل سیم‌کشی ارتباطی، بررسی کدهای خطا و اجرای عملیات راه‌اندازی اولیه طبق پروتکل سازنده. در ادامه، پارامترهایی نظیر دماهای کاری، فشارهای قابل‌اندازه‌گیری، فرکانس کمپرسور، عملکرد شیرهای انبساط الکترونیکی و پاسخ سیستم در حالت سرمایش و گرمایش ارزیابی می‌شوند تا آمادگی سیستم برای بهره‌برداری تأیید شود.",
+      },
+    ],
   },
 } as const;
 
@@ -46,7 +99,7 @@ export default function InstallationCommissioning({
   const isRTL = locale === "fa";
   const t = translations[locale];
 
-  const { qualityChecks } = getInstallationData(locale);
+  const qualityChecks = t.qualityChecks;
 
   return (
     <section
@@ -57,7 +110,6 @@ export default function InstallationCommissioning({
     >
       <div className="mx-auto max-w-[1800px]">
         <div className="grid lg:grid-cols-12">
-
           {/* SECTION MARKER */}
           <aside
             className={`border-b border-foreground/10 p-6 lg:col-span-3 lg:border-b-0 lg:p-8 ${
@@ -100,10 +152,8 @@ export default function InstallationCommissioning({
 
           {/* MAIN SECTION CONTENT */}
           <div className="min-w-0 lg:col-span-9">
-
             {/* INTRODUCTION */}
             <div className="px-6 pb-9 pt-12 md:px-10 md:pt-14 lg:px-12 lg:pb-10">
-
               {/* EYEBROW */}
               <span
                 className={`font-sans text-[10px] font-semibold text-accent ${
@@ -128,7 +178,7 @@ export default function InstallationCommissioning({
 
                 <br />
 
-                <span className="text-foreground/35">
+                <span className="text-foreground">
                   {t.headingSecond}
                 </span>
               </h2>
@@ -143,10 +193,9 @@ export default function InstallationCommissioning({
                 and no new full-width section is added.
               */}
               <div className="mt-6 grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] md:items-start md:gap-8">
-
                 {/* DESCRIPTION */}
                 <div className="min-w-0">
-                  <p className="max-w-2xl font-sans text-sm leading-7 text-foreground/60 md:text-base">
+                  <p className="max-w-2xl font-sans text-sm leading-7 text-foreground md:text-base">
                     {t.paragraph}
                   </p>
 
@@ -230,7 +279,7 @@ export default function InstallationCommissioning({
               </div>
             </div>
 
-            {/* QUALITY CHECK CARDS — UNCHANGED */}
+            {/* QUALITY CHECK CARDS */}
             <div className="grid border-t border-foreground/10 sm:grid-cols-2">
               {qualityChecks.map((check, index) => (
                 <article
@@ -263,7 +312,7 @@ export default function InstallationCommissioning({
                       {check.title}
                     </h3>
 
-                    <p className="mt-3 max-w-md font-sans text-sm leading-6 text-foreground/55">
+                    <p className="mt-3 max-w-md font-sans text-sm leading-6 text-foreground">
                       {check.description}
                     </p>
                   </div>
@@ -271,7 +320,6 @@ export default function InstallationCommissioning({
               ))}
             </div>
           </div>
-
         </div>
       </div>
     </section>

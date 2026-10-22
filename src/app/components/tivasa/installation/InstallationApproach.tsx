@@ -34,7 +34,7 @@ const translations = {
     description:
       "عملکرد یک سیستم VRF تنها به تجهیزات آن وابسته نیست.",
     eyebrow: "مهندسی پیش از اجرا",
-    heading: ["عملکرد مطلوب", "از پیش از نصب", "آغاز می‌شود."],
+    heading: ["عملکرد مطلوب", "پیش از نصب", "آغاز می‌شود."],
     detail: "VRF / اجرای فنی",
 
     firstLabel: "شناخت محیط پروژه",
@@ -45,7 +45,7 @@ const translations = {
     secondDescription:
       "طراحی سیستم، پیکربندی لوله‌کشی، جانمایی تجهیزات، هماهنگی برق و راه‌اندازی باید در کنار یکدیگر عمل کنند تا عملکرد پایدار و قابل اعتماد سیستم فراهم شود.",
 
-    imageLabel: "مهندسی تأسیسات",
+    imageLabel: "مهندسی اجرا",
     imageDetail: "VRF / یکپارچگی سیستم",
     imageAlt:
       "نمای نزدیک تجهیزات تهویه مطبوع و دریچه توزیع هوا",
@@ -101,7 +101,13 @@ export default function InstallationApproach({
                 </span>
               </div>
 
-              <p className="mt-6 max-w-xs font-sans text-base leading-7 text-foreground/55">
+              <p
+                className={`mt-6 max-w-xs font-sans text-base leading-7 ${
+                  isRTL
+                    ? "text-foreground"
+                    : "text-foreground"
+                }`}
+              >
                 {t.description}
               </p>
             </div>
@@ -147,7 +153,14 @@ export default function InstallationApproach({
 
                   <br />
 
-                  <span className="text-foreground/35">
+                  {/* OPAQUE PERSIAN HEADING */}
+                  <span
+                    className={
+                      isRTL
+                        ? "text-foreground"
+                        : "text-foreground"
+                    }
+                  >
                     {t.heading[2]}
                   </span>
                 </h2>
@@ -156,10 +169,10 @@ export default function InstallationApproach({
                   <span className="h-px w-8 bg-accent" />
 
                   <span
-                    className={`font-sans text-[10px] font-medium text-foreground/35 ${
+                    className={`font-sans text-[10px] font-medium ${
                       isRTL
-                        ? ""
-                        : "uppercase tracking-[0.16em]"
+                        ? "text-foreground"
+                        : "text-foreground uppercase tracking-[0.16em]"
                     }`}
                   >
                     {t.detail}
@@ -177,13 +190,7 @@ export default function InstallationApproach({
               >
                 <figure className="group/approach flex h-full min-w-0 flex-col">
 
-                  {/*
-                    MAIN IMAGE FRAME
-
-                    Retains the original dimensions while
-                    using the same border and accent treatment
-                    as the newer technical photographs.
-                  */}
+                  {/* MAIN IMAGE FRAME */}
                   <div className="relative h-[260px] overflow-hidden border border-foreground/15 bg-foreground/[0.035] sm:h-[340px] lg:min-h-[390px] lg:flex-1">
 
                     {/* ORIGINAL IMAGE — UNCHANGED */}
@@ -229,16 +236,22 @@ export default function InstallationApproach({
                   {/* BILINGUAL IMAGE CAPTION */}
                   <figcaption className="mt-2 flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
                     <span
-                      className={`font-sans text-[10px] font-semibold text-foreground/65 ${
+                      className={`font-sans text-[10px] font-semibold ${
                         isRTL
-                          ? ""
-                          : "uppercase tracking-[0.08em]"
+                          ? "text-foreground"
+                          : "text-foreground uppercase tracking-[0.08em]"
                       }`}
                     >
                       {t.imageLabel}
                     </span>
 
-                    <span className="font-sans text-[9px] font-medium text-foreground/35">
+                    <span
+                      className={`font-sans text-[9px] font-medium ${
+                        isRTL
+                          ? "text-foreground"
+                          : "text-foreground"
+                      }`}
+                    >
                       {t.imageDetail}
                     </span>
                   </figcaption>
@@ -284,10 +297,10 @@ export default function InstallationApproach({
                     <span className="h-px w-6 bg-foreground/15" />
 
                     <h3
-                      className={`font-sans text-[10px] font-semibold text-foreground/40 ${
+                      className={`font-sans text-[10px] font-semibold ${
                         isRTL
-                          ? ""
-                          : "uppercase tracking-[0.16em]"
+                          ? "text-foreground"
+                          : "text-foreground uppercase tracking-[0.16em]"
                       }`}
                     >
                       {item.label}
@@ -295,7 +308,13 @@ export default function InstallationApproach({
                   </div>
 
                   {/* DESCRIPTION */}
-                  <p className="max-w-md font-sans text-base leading-7 text-foreground/65">
+                  <p
+                    className={`max-w-md font-sans text-base leading-7 ${
+                      isRTL
+                        ? "text-foreground"
+                        : "text-foreground"
+                    }`}
+                  >
                     {item.description}
                   </p>
                 </div>

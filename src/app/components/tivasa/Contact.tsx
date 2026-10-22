@@ -157,7 +157,7 @@ export default function Contact({ locale }: ContactProps) {
               >
                 {t.headingFirst}
                 <br />
-                <span className="font-normal text-foreground/65">
+                <span className="font-normal text-foreground">
                   {t.headingSecond}
                 </span>
               </h2>
@@ -246,7 +246,7 @@ export default function Contact({ locale }: ContactProps) {
                   {t.consultation}
                 </h3>
 
-                <p className="mt-2 max-w-md font-sans text-[13px] leading-6 text-foreground/45">
+                <p className="mt-2 max-w-md font-sans text-[13px] leading-6 text-foreground">
                   {t.projectDescription}
                 </p>
 

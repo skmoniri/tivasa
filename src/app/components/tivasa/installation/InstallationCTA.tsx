@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ArrowUpLeft, ArrowUpRight } from "lucide-react";
 
@@ -102,7 +103,7 @@ export default function InstallationCTA({ locale }: Props) {
               >
                 {t.headingFirst}
                 <br />
-                <span className="font-normal text-background/60">
+                <span className="font-normal text-background">
                   {t.headingSecond}
                 </span>
               </h2>
@@ -110,7 +111,7 @@ export default function InstallationCTA({ locale }: Props) {
 
             {/* DESCRIPTION + CTA */}
             <div className="flex flex-col gap-7 border-t border-background/15 px-6 py-7 md:flex-row md:items-center md:justify-between md:px-10 lg:px-12">
-              <p className="max-w-lg font-sans text-sm leading-7 text-background/60 md:text-base">
+              <p className="max-w-lg font-sans text-sm leading-7 text-background md:text-base">
                 {t.paragraph}
               </p>
 
@@ -146,7 +147,7 @@ export default function InstallationCTA({ locale }: Props) {
 
               <Link
                 href={localizeHref("/", locale)}
-                className={`group inline-flex items-center gap-2 font-sans text-[10px] font-semibold text-background/50 transition-colors duration-300 hover:text-background focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent ${
+                className={`group inline-flex items-center gap-2 font-sans text-[10px] font-semibold text-background/55 transition-colors duration-300 hover:text-background focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent ${
                   isRTL ? "" : "uppercase tracking-[0.16em]"
                 }`}
               >

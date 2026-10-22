@@ -394,8 +394,17 @@ export default function Projects({ locale }: ProjectsProps) {
                 </div>
               </div>
 
-              <p className="mt-5 max-w-xs font-sans text-sm font-normal leading-6 text-background/45 xl:text-base xl:leading-7">
-                {t.description}
+            <p className="mt-5 max-w-xs font-sans text-sm font-normal leading-6 text-background/45 xl:text-base xl:leading-7">
+              {isRTL ? (
+                <>
+                  منتخبی از پروژه‌های سیستم VRF در ساختمان‌های درمانی، تجاری،
+                  زیرساختی، اداری و مسکونی؛
+                  <span className="mt-2 block whitespace-nowrap">                    طراحی، تأمین و اجرا توسط تیواسا.
+                  </span>
+                </>
+              ) : (
+                t.description
+              )}
               </p>
             </div>
           </aside>

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useRef, useState, type TouchEvent } from "react";
@@ -69,6 +70,7 @@ export default function InstallationProcess({ locale }: Props) {
       touchStart.current = null;
       return;
     }
+
     touchStart.current = {
       x: event.touches[0].clientX,
       y: event.touches[0].clientY,
@@ -78,10 +80,12 @@ export default function InstallationProcess({ locale }: Props) {
   const handleTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
     const start = touchStart.current;
     touchStart.current = null;
+
     if (!start || event.changedTouches.length === 0) return;
 
     const deltaX = event.changedTouches[0].clientX - start.x;
     const deltaY = event.changedTouches[0].clientY - start.y;
+
     if (Math.abs(deltaX) < 45 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
 
     if (deltaX < 0) goToNext();
@@ -133,6 +137,7 @@ export default function InstallationProcess({ locale }: Props) {
 
               <div className="flex items-center gap-3">
                 <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+
                 <span
                   className={`font-sans text-xs font-semibold text-accent ${
                     isRTL ? "" : "uppercase tracking-[0.16em]"
@@ -169,8 +174,12 @@ export default function InstallationProcess({ locale }: Props) {
                 }`}
               >
                 {t.headingFirst}
+
                 <br />
-                <span className="text-background/40">{t.headingSecond}</span>
+
+                <span className="text-background">
+                  {t.headingSecond}
+                </span>
               </h2>
             </div>
 
@@ -197,13 +206,7 @@ export default function InstallationProcess({ locale }: Props) {
                     >
                       <span
                         dir="ltr"
-                        className={`font-display text-xs font-semibold tracking-[-0.03em] transition-colors duration-300 motion-reduce:transition-none md:text-base ${
-                          isActive
-                            ? "text-background"
-                            : isCompleted
-                              ? "text-background/65"
-                              : "text-background/35 group-hover:text-background/80"
-                        }`}
+                        className="font-display text-xs font-semibold tracking-[-0.03em] text-background/65 transition-colors duration-300 group-hover:text-background motion-reduce:transition-none md:text-base"
                       >
                         {step.number}
                       </span>
@@ -231,7 +234,7 @@ export default function InstallationProcess({ locale }: Props) {
               </div>
 
               <div
-                className={`mt-3 flex items-center justify-between gap-4 font-sans text-[9px] font-medium text-background/40 ${
+                className={`mt-3 flex items-center justify-between gap-4 font-sans text-[9px] font-medium text-background/45 ${
                   isRTL ? "" : "uppercase tracking-[0.16em]"
                 }`}
               >
@@ -302,7 +305,7 @@ export default function InstallationProcess({ locale }: Props) {
                   <div className="mt-4 min-h-[80px] md:min-h-[90px]">
                     <p
                       key={`description-${activeStep}`}
-                      className="tivasa-process-description max-w-xl font-sans text-sm leading-6 text-background/70 md:text-base md:leading-7"
+                      className="tivasa-process-description max-w-xl font-sans text-sm leading-6 text-background md:text-base md:leading-7"
                     >
                       {currentStep.description}
                     </p>
@@ -310,6 +313,7 @@ export default function InstallationProcess({ locale }: Props) {
 
                   <div className="mt-auto flex items-center gap-3 border-t border-background/15 pt-4">
                     <span className="h-1.5 w-1.5 shrink-0 bg-accent" />
+
                     <span
                       key={`detail-${activeStep}`}
                       className={`tivasa-process-detail font-sans text-[10px] font-semibold text-background/45 ${
@@ -333,15 +337,17 @@ export default function InstallationProcess({ locale }: Props) {
                 >
                   {t.stage}
                 </span>
+
                 <span
                   dir="ltr"
                   className="font-display text-lg font-semibold tracking-[-0.04em] text-background"
                 >
                   {currentStep.number}
                 </span>
+
                 <span
                   dir="ltr"
-                  className="font-sans text-xs text-background/35"
+                  className="font-sans text-xs text-background/45"
                 >
                   / {String(totalSteps).padStart(2, "0")}
                 </span>

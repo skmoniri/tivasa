@@ -8,38 +8,42 @@ interface HeroProps {
 const content = {
   en: {
     industrial: "Industrial systems",
-    classification: "Engineering / Manufacturing",
-    technology: "Technology",
+    classification: "Engineering / Supply",
+    technology: "Sustainable Cooling",
     eyebrow: "Engineering",
     headingFirst: "VRF SOLUTIONS.",
     headingSecond: "ENGINEERED EXCELLENCE.",
     description:
-      "Tivasa develops technical solutions for demanding industrial environments — combining engineering precision, manufacturing expertise and practical performance.",
+      "Tivasa combines engineering precision with world-class performance to develop technical solutions for optimal cooling.",
     scroll: "Scroll to explore",
     location: "Tehran / Iran",
     company: "Company",
     active: "Active",
-    statementFirst: "Engineering ideas into",
-    statementSecond: "practical systems.",
+    statementFirst: "Tiv Asa HVAC (TETA),",
+    statementSecond:
+      "Design, Supply & Installation of Advanced VRF Systems.",
     disciplines: "Disciplines",
-    items: ["Design", "Supply & Manufacturing", "After-Sales Service"],  },
+    items: ["Design", "Supply & Manufacturing", "After-Sales Service"],
+  },
   fa: {
     industrial: "سیستم‌های صنعتی",
-    classification: "مهندسی / تولید",
-    technology: "فناوری",
+    classification: "مهندسی / تأمین",
+    technology: "سرمایش پایدار",
     eyebrow: "مهندسی",
     headingFirst: "راهکارهای تخصصی",
     headingSecond: "VRF",
     description:
-      "تیواسا با تلفیق دقت مهندسی، تخصص تولید و عملکرد کاربردی، راهکارهای فنی را برای محیط‌های صنعتی و شرایط کاری پیچیده توسعه می‌دهد.",
+      "تیواسا با تلفیق دقت مهندسی و عملکرد در قیاس جهانی، راهکارهای فنی را برای سرمایش مطلوب توسعه می‌دهد.",
     scroll: "برای مشاهده بیشتر پیمایش کنید",
     location: "تهران / ایران",
     company: "شرکت",
     active: "فعال",
-    statementFirst: "تبدیل ایده‌های مهندسی به",
-    statementSecond: "سیستم‌های کاربردی.",
+    statementFirst: "تهویه تیو آسا (تتا)،",
+    statementSecond:
+      "طراحی، تأمین و اجرای سیستم‌های پیشرفته VRF",
     disciplines: "حوزه‌های فعالیت",
-    items: ["طراحی", "تأمین و تولید", "خدمات پس از فروش"],  },
+    items: ["طراحی", "تأمین و تولید", "خدمات پس از فروش"],
+  },
 } as const;
 
 export default function Hero({ locale }: HeroProps) {
@@ -116,6 +120,7 @@ export default function Hero({ locale }: HeroProps) {
       {/* MAIN GRID */}
       <div className="relative mx-auto max-w-[1800px]">
         <div className="grid min-h-[calc(100svh-6rem)] grid-cols-1 lg:grid-cols-12">
+
           {/* SIDE RAIL */}
           <aside
             className={`relative z-10 hidden px-6 py-6 lg:col-span-1 lg:flex lg:flex-col lg:justify-between ${
@@ -149,6 +154,7 @@ export default function Hero({ locale }: HeroProps) {
 
           {/* MAIN HERO CONTENT */}
           <div className="relative z-10 flex min-h-[calc(100svh-6rem)] min-w-0 flex-col justify-between px-5 py-7 md:px-10 md:py-10 lg:col-span-8 lg:px-14 lg:py-12">
+
             {/* CLASSIFICATION */}
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
@@ -179,6 +185,7 @@ export default function Hero({ locale }: HeroProps) {
             {/* MAIN STATEMENT */}
             <div className="py-12 md:py-16">
               <div className="relative">
+
                 {/* EDITORIAL MARKER */}
                 <div
                   className={`absolute top-0 hidden h-[clamp(4rem,7vw,8rem)] w-[2px] bg-accent md:block ${
@@ -202,6 +209,7 @@ export default function Hero({ locale }: HeroProps) {
                   <div className="h-px w-12 bg-accent/50" />
                 </div>
 
+                {/* ORIGINAL HEADLINE TYPOGRAPHY */}
                 <h1
                   className={`relative w-full min-w-0 font-display font-semibold text-background ${
                     isRTL
@@ -214,9 +222,29 @@ export default function Hero({ locale }: HeroProps) {
                   {t.headingSecond && (
                     <>
                       <br />
-                      <span className="font-normal">
-                        {t.headingSecond}
-                      </span>
+
+                      {isRTL ? (
+                        /*
+                          PERSIAN:
+                          Keep the original first-line size.
+                          Make VRF larger, heavier and more prominent.
+                        */
+                        <span
+                          dir="ltr"
+                          className="inline-block max-w-full origin-right font-display text-[clamp(3rem,6vw,6rem)] font-black leading-[1.05] tracking-[-0.065em] text-background"
+                        >
+                          {t.headingSecond}
+                        </span>
+                      ) : (
+                        /*
+                          ENGLISH:
+                          Preserve the original ENGINEERED
+                          EXCELLENCE typography.
+                        */
+                        <span className="font-normal">
+                          {t.headingSecond}
+                        </span>
+                      )}
                     </>
                   )}
                 </h1>
@@ -293,6 +321,7 @@ export default function Hero({ locale }: HeroProps) {
             />
 
             <div className="flex h-full flex-col justify-between gap-16 p-6 md:p-8 lg:gap-8 lg:p-8 xl:p-10">
+
               {/* COMPANY */}
               <div>
                 <div className="mb-8 flex items-start justify-between gap-4">
@@ -338,6 +367,7 @@ export default function Hero({ locale }: HeroProps) {
                     }`}
                   />
 
+                  {/* ORIGINAL FONT SIZES RESTORED */}
                   <p
                     className={`max-w-sm font-display font-medium text-background ${
                       isRTL
@@ -348,7 +378,9 @@ export default function Hero({ locale }: HeroProps) {
                     <span className="text-background/60">
                       {t.statementFirst}
                     </span>
+
                     <br />
+
                     <span>
                       {t.statementSecond}
                     </span>

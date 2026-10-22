@@ -16,7 +16,7 @@ const translations = {
     headingFirst: "Installed",
     headingSecond: "with precision.",
     description:
-      "Tivasa provides engineering-led VRF installation and commissioning for commercial and industrial environments, integrating system planning, equipment installation, technical testing and final commissioning.",
+      "At Tivasa, the installation and implementation process for VRF systems begins with a technical assessment of the project and an analysis of its cooling and heating requirements, continuing through final commissioning and system handover. At every stage, the planning of installation routes, equipment positioning, precise refrigerant piping, and electrical and control infrastructure is carried out in accordance with engineering principles and manufacturer guidelines. Continuous quality control, technical testing, and equipment performance evaluations play a key role in ensuring proper installation and long-term system stability. By coordinating the design, installation, and commissioning phases, we aim to optimize energy consumption, improve reliability, and minimize operational risks. At Tivasa, every project progresses through precise planning and professional execution, ensuring that the final result goes beyond equipment installation to deliver a dependable experience of quality, comfort, and engineered performance.",
     explore: "Explore our approach",
     metadata: "Engineering / Commissioning",
   },
@@ -29,7 +29,7 @@ const translations = {
     headingFirst: "نصب اصولی",
     headingSecond: "با دقت مهندسی.",
     description:
-      "تیواسا خدمات نصب و راه‌اندازی سیستم‌های VRF را برای ساختمان‌های تجاری و محیط‌های صنعتی با رویکردی مهندسی ارائه می‌دهد؛ از برنامه‌ریزی سیستم و نصب تجهیزات تا آزمون‌های فنی و راه‌اندازی نهایی.",
+      "فرایند نصب و اجرای سیستم‌های VRF در تیواسا، از بررسی فنی پروژه و تحلیل نیازهای سرمایشی و گرمایشی آغاز شده و تا راه‌اندازی نهایی و تحویل سیستم ادامه می‌یابد. در تمامی مراحل، طراحی مسیرهای اجرایی، جانمایی تجهیزات، اجرای دقیق لوله‌کشی مبرد و زیرساخت‌های الکتریکی و کنترلی، با تکیه بر اصول مهندسی و دستورالعمل‌های سازنده انجام می‌شود. کنترل کیفیت مستمر، انجام تست‌های فنی و بررسی عملکرد تجهیزات، نقش کلیدی در اطمینان از صحت اجرا و پایداری سیستم ایفا می‌کنند. ما با هماهنگی میان مراحل طراحی، اجرا و راه‌اندازی، به دنبال بهینه‌سازی مصرف انرژی، افزایش قابلیت اطمینان و کاهش ریسک‌های بهره‌برداری هستیم. در تیواسا، هر پروژه با برنامه‌ریزی دقیق و اجرای اصولی پیش می‌رود تا نتیجه نهایی، فراتر از نصب تجهیزات، تجربه‌ای مطمئن از کیفیت، آسایش و عملکرد مهندسی‌شده باشد",
     explore: "آشنایی با رویکرد ما",
     metadata: "مهندسی / راه‌اندازی",
   },

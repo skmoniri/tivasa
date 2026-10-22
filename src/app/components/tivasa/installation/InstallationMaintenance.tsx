@@ -77,7 +77,6 @@ export default function InstallationMaintenance({
     >
       <div className="mx-auto max-w-[1800px]">
         <div className="grid lg:grid-cols-12">
-
           {/* SECTION MARKER */}
           <aside
             className={`border-b border-background/15 p-6 lg:col-span-3 lg:border-b-0 lg:p-8 ${
@@ -118,7 +117,6 @@ export default function InstallationMaintenance({
 
           {/* MAIN CONTENT */}
           <div className="min-w-0 lg:col-span-9">
-
             {/*
               INTRO + WELDING PHOTOGRAPH
 
@@ -127,7 +125,6 @@ export default function InstallationMaintenance({
               full-width image section.
             */}
             <div className="grid items-center gap-7 px-6 pb-8 pt-10 md:px-10 md:pt-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] lg:gap-8 lg:px-12">
-
               {/* INTRO HEADING */}
               <div className="min-w-0">
                 <span
@@ -152,7 +149,7 @@ export default function InstallationMaintenance({
 
                   <br />
 
-                  <span className="text-background/35">
+                  <span className="text-background">
                     {t.headingSecond}
                   </span>
                 </h2>
@@ -161,7 +158,6 @@ export default function InstallationMaintenance({
               {/* WELDING TEAM IMAGE */}
               <figure className="group/welding min-w-0">
                 <div className="relative h-[180px] overflow-hidden border border-background/20 bg-background/5 sm:h-[200px] lg:h-[185px] xl:h-[205px]">
-
                   {/* PHOTOGRAPH */}
                   <Image
                     src="/welding-team.png"
@@ -205,7 +201,7 @@ export default function InstallationMaintenance({
                 {/* IMAGE CAPTION */}
                 <figcaption className="mt-2 flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
                   <span
-                    className={`font-sans text-[10px] font-semibold text-background/70 ${
+                    className={`font-sans text-[10px] font-semibold text-background/65 ${
                       isRTL
                         ? ""
                         : "uppercase tracking-[0.08em]"
@@ -214,17 +210,15 @@ export default function InstallationMaintenance({
                     {t.imageLabel}
                   </span>
 
-                  <span className="font-sans text-[9px] font-medium text-background/40">
+                  <span className="font-sans text-[9px] font-medium text-background/35">
                     {t.imageDetail}
                   </span>
                 </figcaption>
               </figure>
-
             </div>
 
             {/* WARRANTY + MAINTENANCE CARDS */}
             <div className="grid border-t border-background/15 md:grid-cols-2">
-
               {/* WARRANTY */}
               <article
                 className={`flex flex-col border-b border-background/15 px-6 py-8 md:border-b-0 md:px-10 lg:px-12 lg:py-10 ${
@@ -255,13 +249,13 @@ export default function InstallationMaintenance({
                   {t.warrantyHeading}
                 </h3>
 
-                <p className="mt-5 max-w-md font-sans text-sm leading-7 text-background/65">
+                <p className="mt-5 max-w-md font-sans text-sm leading-7 text-background">
                   {t.warrantyDescription}
                 </p>
 
                 <div className="mt-auto pt-8">
                   <div className="border-t border-background/15 pt-4">
-                    <p className="max-w-sm font-sans text-xs leading-6 text-background/40">
+                    <p className="max-w-sm font-sans text-xs leading-6 text-background/35">
                       {t.warrantyNote}
                     </p>
                   </div>
@@ -270,7 +264,6 @@ export default function InstallationMaintenance({
 
               {/* MAINTENANCE */}
               <article className="flex flex-col px-6 py-8 md:px-10 lg:px-12 lg:py-10">
-
                 <div className="flex items-center gap-3">
                   <span className="h-5 w-px bg-accent" />
 
@@ -295,7 +288,7 @@ export default function InstallationMaintenance({
                   {t.maintenanceHeading}
                 </h3>
 
-                <p className="mt-5 max-w-md font-sans text-sm leading-7 text-background/65">
+                <p className="mt-5 max-w-md font-sans text-sm leading-7 text-background">
                   {t.maintenanceDescription}
                 </p>
 
@@ -313,7 +306,7 @@ export default function InstallationMaintenance({
                         {String(index + 1).padStart(2, "0")}
                       </span>
 
-                      <span className="font-sans text-sm leading-6 text-background/65 transition-colors duration-300 group-hover:text-background">
+                      <span className="font-sans text-sm leading-6 text-background transition-colors duration-300 group-hover:text-background">
                         {item}
                       </span>
                     </li>
@@ -322,7 +315,6 @@ export default function InstallationMaintenance({
               </article>
             </div>
           </div>
-
         </div>
       </div>
     </section>

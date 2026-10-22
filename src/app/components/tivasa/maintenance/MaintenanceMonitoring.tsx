@@ -1,3 +1,4 @@
+
 import { Activity } from "lucide-react";
 
 import type { Locale } from "@/i18n/config";
@@ -70,7 +71,7 @@ export default function MaintenanceMonitoring({
                 {t.title}
                 <br />
 
-                <span className="font-normal text-background/40">
+                <span className="font-normal text-background">
                   {t.accent}
                 </span>
               </h2>
@@ -131,7 +132,7 @@ export default function MaintenanceMonitoring({
                     </h3>
 
                     {/* INDICATOR PURPOSE */}
-                    <p className="min-w-0 font-sans text-[12px] leading-5 text-background/50 transition-colors duration-300 group-hover:text-background/70">
+                    <p className="min-w-0 font-sans text-[12px] leading-5 text-background transition-colors duration-300 group-hover:text-background">
                       {item.purpose}
                     </p>
                   </article>

@@ -63,7 +63,6 @@ export default function MaintenanceContact({
 
       <div className="relative mx-auto max-w-[1800px]">
         <div className="grid lg:grid-cols-12">
-
           {/* SECTION MARKER */}
           <aside
             className={`border-b border-background/15 p-6 lg:col-span-3 lg:border-b-0 lg:p-8 ${
@@ -119,7 +118,6 @@ export default function MaintenanceContact({
 
           {/* MAIN CONTENT */}
           <div className="min-w-0 lg:col-span-9">
-
             {/* EDITORIAL STATEMENT */}
             <div className="px-6 pb-7 pt-9 md:px-10 lg:px-12 lg:pt-11">
               <span
@@ -144,7 +142,7 @@ export default function MaintenanceContact({
 
                 <br />
 
-                <span className="font-normal text-background/40">
+                <span className="font-normal text-background">
                   {t.accent}
                 </span>
               </h2>
@@ -152,10 +150,9 @@ export default function MaintenanceContact({
 
             {/* DESCRIPTION + ACTIONS */}
             <div className="grid gap-6 border-t border-background/15 px-6 py-6 md:px-10 lg:px-12 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-center">
-
               {/* DESCRIPTION */}
               <div className="max-w-xl">
-                <p className="font-sans text-sm leading-7 text-background/65">
+                <p className="font-sans text-sm leading-7 text-background">
                   {t.description}
                 </p>
 
@@ -166,7 +163,6 @@ export default function MaintenanceContact({
 
               {/* ACTION BUTTONS */}
               <div className="flex min-w-0 flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center xl:justify-end">
-
                 {/* MAINTENANCE BROCHURE DOWNLOAD */}
                 <a
                   href={brochure.url}
@@ -260,7 +256,6 @@ export default function MaintenanceContact({
                 TIVASA
               </span>
             </div>
-
           </div>
         </div>
       </div>

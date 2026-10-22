@@ -94,7 +94,7 @@ export default function MaintenanceStrategies({
               <br />
 
               <span
-                className={`font-normal text-foreground/75 ${
+                className={`font-normal text-foreground ${
                   isRTL ? "md:mr-[3%]" : "md:ml-[3%]"
                 }`}
               >
@@ -114,7 +114,7 @@ export default function MaintenanceStrategies({
             <div className="mt-7 grid gap-6 border-t border-foreground/10 pt-5 md:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] md:items-start md:gap-8">
               {/* SUPPORTING TEXT */}
               <div className="flex min-w-0 flex-col items-start justify-between gap-6">
-                <p className="max-w-xl font-sans text-sm leading-7 text-foreground/55">
+                <p className="max-w-xl font-sans text-sm leading-7 text-foreground">
                   {t.description}
                 </p>
 
@@ -257,7 +257,7 @@ export default function MaintenanceStrategies({
               </div>
 
               {/* DESCRIPTION */}
-              <p className="mt-4 max-w-sm font-sans text-sm leading-6 text-foreground/55 transition-colors duration-500 group-hover:text-foreground/65">
+              <p className="mt-4 max-w-sm font-sans text-sm leading-6 text-foreground transition-colors duration-500 group-hover:text-foreground">
                 {item.description}
               </p>
 
