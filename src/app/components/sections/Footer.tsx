@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import { ArrowUp, ArrowUpRight, ArrowUpLeft } from "lucide-react";
 
@@ -15,6 +16,8 @@ const translations = {
     products: "Products",
     projects: "Projects",
     installation: "Installation",
+    maintenance: "Maintenance",
+    dataCenter: "DataCenter",
     about: "About",
     contact: "Contact",
     tagline: "Industrial / Technical / Engineering",
@@ -29,6 +32,8 @@ const translations = {
     products: "محصولات",
     projects: "پروژه‌ها",
     installation: "نصب و راه‌اندازی",
+    maintenance: "تعمیر و نگهداری",
+    dataCenter: "دیتا سنتر",
     about: "درباره ما",
     contact: "تماس با ما",
     tagline: "صنعت / فناوری / مهندسی",
@@ -44,17 +49,37 @@ export default function Footer({ locale }: FooterProps) {
   const t = translations[locale];
 
   const exploreLinks = [
-    { label: t.products, href: localizeHref("/#products", locale) },
-    { label: t.projects, href: localizeHref("/#projects", locale) },
+    {
+      label: t.products,
+      href: localizeHref("/#products", locale),
+    },
+    {
+      label: t.projects,
+      href: localizeHref("/#projects", locale),
+    },
     {
       label: t.installation,
       href: localizeHref("/installation", locale),
     },
+    {
+      label: t.maintenance,
+      href: localizeHref("/maintenance", locale),
+    },
+    {
+      label: t.dataCenter,
+      href: localizeHref("/dataCenter", locale),
+    },
   ];
 
   const companyLinks = [
-    { label: t.about, href: localizeHref("/#about", locale) },
-    { label: t.contact, href: localizeHref("/#contact", locale) },
+    {
+      label: t.about,
+      href: localizeHref("/#about", locale),
+    },
+    {
+      label: t.contact,
+      href: localizeHref("/#contact", locale),
+    },
   ];
 
   return (
@@ -72,17 +97,32 @@ export default function Footer({ locale }: FooterProps) {
               }`}
             />
 
-            <div className="grid gap-16 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-20">
+            {/*
+              FIX:
+              Use top alignment instead of bottom alignment.
+
+              The original lg:items-end caused the TIVASA
+              wordmark to move downward when the navigation
+              gained two additional links.
+
+              lg:items-start keeps the branding anchored
+              to its original top position.
+            */}
+            <div className="grid gap-16 lg:grid-cols-[1fr_auto] lg:items-start lg:gap-20">
               {/* BRAND */}
               <div className="min-w-0">
                 <div className="relative flex min-w-0 justify-start">
-                  <div dir="ltr" className="relative w-max max-w-none shrink-0">
+                  <div
+                    dir="ltr"
+                    className="relative w-max max-w-none shrink-0"
+                  >
                     {/* Ghost wordmark */}
                     <div
                       aria-hidden="true"
                       className="pointer-events-none absolute left-1 top-1 whitespace-nowrap font-display text-[clamp(5.25rem,18vw,18rem)] font-semibold leading-[0.58] tracking-[-0.08em] text-accent/[0.75]"
                       style={{
-                        fontFamily: "var(--font-clash-grotesk), sans-serif",
+                        fontFamily:
+                          "var(--font-clash-grotesk), sans-serif",
                       }}
                     >
                       TIVASA
@@ -92,7 +132,8 @@ export default function Footer({ locale }: FooterProps) {
                     <div
                       className="relative whitespace-nowrap font-display text-[clamp(5.25rem,18vw,18rem)] font-semibold leading-[0.58] tracking-[-0.08em]"
                       style={{
-                        fontFamily: "var(--font-clash-grotesk), sans-serif",
+                        fontFamily:
+                          "var(--font-clash-grotesk), sans-serif",
                       }}
                     >
                       TIVASA
@@ -107,9 +148,12 @@ export default function Footer({ locale }: FooterProps) {
                   }`}
                 >
                   <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+
                   <span
                     className={`font-sans text-[10px] font-medium text-background/35 sm:text-xs ${
-                      isRTL ? "" : "uppercase tracking-[0.18em]"
+                      isRTL
+                        ? ""
+                        : "uppercase tracking-[0.18em]"
                     }`}
                   >
                     {t.tagline}
@@ -146,7 +190,9 @@ export default function Footer({ locale }: FooterProps) {
 
               <div
                 className={`flex items-center gap-3 font-sans text-[10px] font-medium text-background/30 sm:text-xs ${
-                  isRTL ? "" : "uppercase tracking-[0.14em]"
+                  isRTL
+                    ? ""
+                    : "uppercase tracking-[0.14em]"
                 }`}
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-accent" />
@@ -155,7 +201,9 @@ export default function Footer({ locale }: FooterProps) {
 
               <span
                 className={`font-sans text-[10px] font-medium text-background/25 sm:text-xs ${
-                  isRTL ? "" : "uppercase tracking-[0.14em]"
+                  isRTL
+                    ? ""
+                    : "uppercase tracking-[0.14em]"
                 }`}
               >
                 {t.disciplines}
@@ -166,7 +214,9 @@ export default function Footer({ locale }: FooterProps) {
                 href="#top"
                 aria-label={t.backToTop}
                 className={`group inline-flex w-fit items-center gap-2 font-sans text-[10px] font-medium text-background/40 transition-colors duration-300 hover:text-background sm:text-xs ${
-                  isRTL ? "" : "uppercase tracking-[0.14em]"
+                  isRTL
+                    ? ""
+                    : "uppercase tracking-[0.14em]"
                 }`}
               >
                 <span>{t.backToTop}</span>
@@ -197,7 +247,11 @@ interface FooterNavGroupProps {
   isRTL: boolean;
 }
 
-function FooterNavGroup({ title, links, isRTL }: FooterNavGroupProps) {
+function FooterNavGroup({
+  title,
+  links,
+  isRTL,
+}: FooterNavGroupProps) {
   const DirectionArrow = isRTL ? ArrowUpLeft : ArrowUpRight;
 
   return (
@@ -208,7 +262,9 @@ function FooterNavGroup({ title, links, isRTL }: FooterNavGroupProps) {
 
         <span
           className={`font-sans text-[10px] font-medium text-background/25 sm:text-xs ${
-            isRTL ? "" : "uppercase tracking-[0.16em]"
+            isRTL
+              ? ""
+              : "uppercase tracking-[0.16em]"
           }`}
         >
           {title}
@@ -222,7 +278,9 @@ function FooterNavGroup({ title, links, isRTL }: FooterNavGroupProps) {
             key={link.href}
             href={link.href}
             className={`group flex items-center justify-between border-b border-background/10 py-3.5 font-display text-lg font-medium text-background/60 transition-colors duration-300 hover:text-background sm:py-4 sm:text-xl ${
-              isRTL ? "tracking-normal" : "tracking-[-0.02em]"
+              isRTL
+                ? "tracking-normal"
+                : "tracking-[-0.02em]"
             }`}
           >
             <span>{link.label}</span>

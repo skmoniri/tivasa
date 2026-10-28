@@ -1,3 +1,4 @@
+
 import type { Locale } from "./config";
 
 export const tivasaData = {
@@ -104,6 +105,15 @@ export const tivasaData = {
         description:
           "Design, supply and installation of a Midea VRF system for a residential project.",
         image: "/images/projects/Twin Towers Over the Urban Skyline.png",
+      },
+      {
+        number: "10",
+        category: "Office",
+        title: "Touba Tower (Judiciary)",
+        meta: "Midea V8 / VRF System",
+        description:
+          "Design, supply and installation of a Midea V8 VRF air-conditioning system.",
+        image: "/images/projects/Modern City Tower at Sunset.png",
       },
     ],
     products: [
@@ -240,6 +250,15 @@ export const tivasaData = {
         description:
           "طراحی، تأمین و نصب سیستم VRF برند میدیا برای پروژه مسکونی.",
         image: "/images/projects/Twin Towers Over the Urban Skyline.png",
+      },
+      {
+        number: "10",
+        category: "اداری",
+        title: "پروژه برج طوبی (قوه قضاییه)",
+        meta: "میدیا نسل ۸ / سیستم VRF",
+        description:
+          "طراحی، تأمین و اجرای سیستم تهویه مطبوع VRF نسل هشتم برند میدیا.",
+        image: "/images/projects/Modern City Tower at Sunset.png",
       },
     ],
     products: [
